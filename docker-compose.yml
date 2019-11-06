@@ -9,7 +9,7 @@ services:
     container_name: webserver
     restart: 'no'
     volumes:
-      - ./src:/var/www
+      - ${APP_PATH:-./src}:/var/www
       - ./docker/webserver/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - laravel

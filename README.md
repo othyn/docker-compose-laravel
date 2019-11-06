@@ -100,15 +100,15 @@ That will attach you back to the logs. To do this for a specific container, add 
 
 ```bash
 $ docker-compose logs -f -t <container>
-# container can be any running container. e.g. webserver, database or app
+# <container> can be any running container. e.g. webserver, database or app
 ```
 
 To run a command in a running the container:
 
 ```bash
 $ docker-compose exec <container> <command>
-# container can be any running container. e.g. webserver, database or app
-# command can be any command. e.g. 'top' or 'sh' (Alpine) / 'bash' (Ubuntu) to enter an interactive shell
+# <container> can be any running container. e.g. webserver, database or app
+# <command> can be any command. e.g. 'top' or 'sh' (Alpine) / 'bash' (Ubuntu) to enter an interactive shell
 ```
 
 To stop the containers, if they are attached simply press `CTRL` + `C` which is the escape sequence for any CLI application. That should gracefully stop them, if it aborts or the containers are running in `detached` mode, do the following:
@@ -121,13 +121,6 @@ You can use `stop` instead of `down` to just stop the running container. The abo
 
 ## Configuration
 There are elements of this docker project that you can configure for you project if you require extra functionality. Obviously, at the end of the day this is just a bog standard Docker project, so you can go to town with any changes you wish. But these are the main areas that are easy adaptable.
-
-### Building
-Should you change parts of the docker container, make sure to re-build the containers!
-
-```bash
-$ docker-compose build
-```
 
 ### Services
 This is the configuration for all of the core services that are configured, the `app`, `database` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and by a directory with the service name in the `docker` directory in the root directory.
@@ -148,6 +141,13 @@ The `mysql.conf` file is any MySQL configuration you wish to set, this overwrite
 
 #### webserver
 The `nginx.conf` file is any NGINX configuration you wish to set, this overwrites the system default `nginx.conf`.
+
+### Building
+Should you change parts of the docker container, make sure to re-build the containers!
+
+```bash
+$ docker-compose build
+```
 
 ## Reference
 This will just have things of reference for the project and a brief explanation on why things exist should it be necessary.

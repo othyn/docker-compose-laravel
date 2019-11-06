@@ -7,19 +7,31 @@ echo "> Beginning installation!"
 # Get the script directory, just so this can be run from anywhere
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$CURRENT_DIR"
-echo "> Script directory: '$CURRENT_DIR'"
+echo "> Script directory set to '$CURRENT_DIR'."
 
 # Step 1
 # Create that .env file!
-echo "> Copying './.env.example' to './.env'"
-cp "./.env.example" "./.env"
+ENV_DIR="./.env"
+ENV_EXAMPLE_DIR="${ENV_DIR}.example"
+if [[ -f "$ENV_DIR" ]]; then
+    echo "> Not copying '$ENV_EXAMPLE_DIR', as '$ENV_DIR' already exists."
+else
+    echo "> Copying '$ENV_EXAMPLE_DIR' to '$ENV_DIR'."
+    cp "$ENV_EXAMPLE_DIR" "$ENV_DIR"
+fi
 
 # Step 2
 # Create a symlink to the parent directory, just so you can run
 # the docker-compose commands from project root. A little quality
 # of life addition.
-echo "> Symlinking './docker-compose.yml' to './../docker-compose.yml'"
-ln -s "./docker-compose.yml" "./../docker-compose.yml"
+DOCKER_DIR="docker/docker-compose.yml"
+DOCKER_SYMLINK_DIR="./../docker-compose.yml"
+if [[ -L "$DOCKER_SYMLINK_DIR" ]]; then
+    echo "> Removing existing symlink at '$DOCKER_SYMLINK_DIR'."
+    rm "$DOCKER_SYMLINK_DIR"
+fi
+echo "> Symlinking '$DOCKER_DIR' to '$DOCKER_SYMLINK_DIR'."
+ln -s "$DOCKER_DIR" "$DOCKER_SYMLINK_DIR"
 
 # Step Done!
 # That's it! Magic. 🎉

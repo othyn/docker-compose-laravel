@@ -19,6 +19,7 @@ My Docker Compose setup for Laravel projects, inspired by [this repo](https://gi
   * [Building](#building)
 * [Reference](#reference)
   * [Ports](#ports)
+* [Changelog](#changelog)
 
 ## Setup
 Setup is fairly straight forward, there are no installation steps for the project itself, just ensure that the prerequisites are met and you are off to the races!
@@ -208,3 +209,13 @@ Here are the exposed port maps for the containers:
 | webserver | 8080      | 80             |
 | database  | 3306      | 3306           |
 | app       | 9000      | 9000           |
+
+## Changelog
+This is the documented history of the project.
+
+* **v1.0**
+  * Inital release.
+  * `docker-compose` configured for Laravel projects.
+  * Supports integration into new and existing projects.
+  * Assisting bash scripts for project setup.
+  * Extensive documentation.

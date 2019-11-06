@@ -84,9 +84,10 @@ To update the submodule in future, use the following command:
 ```bash
 $ cd ~/git/existing-docker-laravel-project
 $ git submodule update --remote --merge
+$ docker/install.existing.sh
 ```
 
-That will download and merge the latest version of the submodule repo.
+That will download and merge the latest version of the submodule repo, then run the installation script to ensure that the module has all of the update steps run.
 
 That's it! Magic. 🎉
 

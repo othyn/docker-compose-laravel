@@ -33,6 +33,11 @@ fi
 echo "> Symlinking '$DOCKER_DIR' to '$DOCKER_SYMLINK_DIR'."
 ln -s "$DOCKER_DIR" "$DOCKER_SYMLINK_DIR"
 
+# Step 3
+# Build the Docker images!
+echo "> Build the Docker containers."
+docker-compose build
+
 # Step Done!
 # That's it! Magic. 🎉
 echo "> Installation complete!"

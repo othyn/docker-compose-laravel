@@ -8,9 +8,11 @@ My Docker Compose setup for Laravel projects, inspired by [this repo](https://gi
   * [Prerequisites](#prerequisites)
   * [New Project](#new-project)
   * [Existing Project](#existing-project)
+    * [Update an Existing Project](#update-an-existing-project)
 * [Usage](#usage)
 * [Configuration](#configuration)
   * [Services](#services)
+    * [.env](#.env)
     * [app](#app)
     * [database](#database)
     * [webserver](#webserver)
@@ -52,28 +54,40 @@ $ cd ~/git/new-docker-laravel-project
 $ laravel new src --force
 ```
 
-That's it! Magic. 🎉
-
 Now you can get to building that Laravel app you've always wanted to.
 
+That's it! Magic. 🎉
+
 ### Existing Project
-For existing projects, its as complicated as adding a git submodule and creating an `.env` file. Let's begin! Firstly, add this git repo as a submodule to the existing project:
+For existing projects, its as complicated as adding a git submodule and runnnig an installation script. Let's begin! Firstly, add this git repo as a submodule to the existing project:
 
 ```bash
 $ cd ~/git/existing-docker-laravel-project
 $ git submodule add git@github.com:othyn/docker-compose-laravel.git docker
 ```
 
-Excellent! That has now added the repo as a submodule, although be sure to commit the addition. You can now view that submodule it in the project's root directory as with any other directory. Now, let's setup that `.env` file:
+Excellent! That has now added the repo as a submodule, although be sure to commit the addition. You can now view that submodule it in the project's root directory as with any other directory. Now, let's run that installation script:
 
 ```bash
-$ cd docker
-$ cp .env.example .env
+$ docker/install.existing.sh
 ```
+
+The installation script does one of two things. First, it creates a working copy of that `.env` file for you. Secondly, it adds a nice quality of life addition to your projects root directory, a symlink to the `docker/docker-compose.yml`, so that you can run the `$ docker-compose` commands in the root of your projects directory.
 
 That's it! Magic. 🎉
 
-By default, for new installations, the `.env` file won't exist, so it defaults in the `docker-compose.yml` to use the `./src` directory. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the required parent directory. Saving you a step!
+#### Update an Existing Project
+
+To update the submodule in future, use the following command:
+
+```bash
+$ cd ~/git/existing-docker-laravel-project
+$ git submodule update --remote --merge
+```
+
+That will download and merge the latest version of the submodule repo.
+
+That's it! Magic. 🎉
 
 ## Usage
 Once the project has been [Setup](#setup), it's very simple to use. Lauch docker composer from within the root directory of the project, the one with the `docker-compose.yml` file in it and away you go! The first time it is run, docker will build the containers, so it may take a little while longer.
@@ -140,6 +154,24 @@ There are elements of this docker project that you can configure for you project
 
 ### Services
 This is the configuration for all of the core services that are configured, the `app`, `database` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and by a directory with the service name in the `docker` directory in the root directory.
+
+### .env
+There is a `.env` file that is currently optional for the project to run on [New Projects](#new-project), but essential to run on [Existing Projects](#existing-project) (see installation steps). By default, for new installations, the `.env` file won't exist, as at the moment all variables contained within it aren't required for new installations and it saves unnecessary setup steps. Although can be used if you do a quick `$ cp .env.example .env`, this is done during the setup of an [Existing Project](#existing-project).
+
+#### `APP_PATH`
+```
+### ### ### ### ### ### ### ### ###
+# Point to the path of your Laravel
+# application code on the host.
+#
+#        New app: ./src
+#   Existing app: ../
+#
+APP_PATH=../
+### ### ### ### ### ### ### ### ###
+```
+
+As the `.env` file won't exist for new installations, it defaults in the `docker-compose.yml` to use the `./src` directory. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the required parent directory as it will only exist on [Existing Project](#existing-project) installations. Saving you a step!
 
 #### app
 The `dockerfile` for the `app` contains all provisioning steps within the build process for the container, so add anything you wish to be built into it in there, as per the Docker docs.

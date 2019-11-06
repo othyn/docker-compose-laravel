@@ -1,0 +1,56 @@
+version: '3.7'
+
+networks:
+  laravel:
+
+services:
+  webserver:
+    image: nginx:stable
+    container_name: webserver
+    restart: 'no'
+    volumes:
+      - ./src:/var/www
+      - ./docker/webserver/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravel
+    ports:
+      - 8080:80
+    depends_on:
+      - database
+      - app
+
+  database:
+    image: mysql:5.7.28
+    container_name: database
+    restart: 'no'
+    volumes:
+      - ./docker/database/mysql.cnf:/etc/mysql/my.cnf
+      - ./docker/database/base.sql:/data/application/base.sql
+      - ./docker/database/persist:/var/lib/mysql
+    networks:
+      - laravel
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: database
+    command: --init-file /data/application/base.sql
+
+  app:
+    container_name: app
+    restart: 'no'
+    volumes:
+      - ./src:/var/www
+      - ./docker/app/entrypoint.sh:/entrypoint.sh
+    networks:
+      - laravel
+    ports:
+      - 9000:9000
+    build:
+      context: .
+      dockerfile: docker/app/dockerfile
+    entrypoint: /entrypoint.sh

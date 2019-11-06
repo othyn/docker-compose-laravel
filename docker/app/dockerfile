@@ -1,0 +1,16 @@
+FROM php:7.2-fpm-alpine
+
+# Update package manager ready for deps to be installed
+RUN apk update
+
+# Install mysql client for DB imports via sql file
+RUN apk add mysql-client
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mysqli
+
+# Set the working directory of the container to the hosted directory
+WORKDIR /var/www
+
+# Launch php-fpm
+CMD ['php-fpm']

@@ -54,5 +54,5 @@ services:
       - 9000:9000
     build:
       context: .
-      dockerfile: docker/app/dockerfile
+      dockerfile: ./docker/app/dockerfile
     entrypoint: /entrypoint.sh

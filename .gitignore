@@ -1,3 +1,4 @@
 .DS_Store
+.env
 docker/database/persist/*
 !docker/database/persist/.gitkeep

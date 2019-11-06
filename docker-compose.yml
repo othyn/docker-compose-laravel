@@ -44,7 +44,7 @@ services:
     container_name: app
     restart: 'no'
     volumes:
-      - ./src:/var/www
+      - ${APP_PATH:-./src}:/var/www
       - ./docker/app/entrypoint.sh:/entrypoint.sh
     networks:
       - laravel

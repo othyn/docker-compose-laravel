@@ -1,4 +1,4 @@
-# docker-compose-laravel
+# 🐳 Docker Compose for Laravel 🐘
 My Docker Compose setup for Laravel projects, inspired by [this repo](https://github.com/aschmelyun/docker-compose-laravel).
 
 ## Table of contents
@@ -52,12 +52,28 @@ $ cd ~/git/new-docker-laravel-project
 $ laravel new src --force
 ```
 
-Done! Now you can get to building that Laravel app you've always wanted to.
+That's it! Magic. 🎉
+
+Now you can get to building that Laravel app you've always wanted to.
 
 ### Existing Project
-For existing projects its a little more complex. At this point in time, just to keep the project structure the same, I would recommend cloning the repo and then manually copying across the files into their new locations. So, this will mean moving the cloned files across into the old repo, then moving the Laravel project into `src`.
+For existing projects, its as complicated as adding a git submodule and creating an `.env` file. Let's begin! Firstly, add this git repo as a submodule to the existing project:
 
-If you have any better suggestions, please feel free to submit them! Such as making this repo into a git submodule.
+```bash
+$ cd ~/git/existing-docker-laravel-project
+$ git submodule add git@github.com:othyn/docker-compose-laravel.git docker
+```
+
+Excellent! That has now added the repo as a submodule, although be sure to commit the addition. You can now view that submodule it in the project's root directory as with any other directory. Now, let's setup that `.env` file:
+
+```bash
+$ cd docker
+$ cp .env.example .env
+```
+
+That's it! Magic. 🎉
+
+By default, for new installations, the `.env` file won't exist, so it defaults in the `docker-compose.yml` to use the `./src` directory. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the required parent directory. Saving you a step!
 
 ## Usage
 Once the project has been [Setup](#setup), it's very simple to use. Lauch docker composer from within the root directory of the project, the one with the `docker-compose.yml` file in it and away you go! The first time it is run, docker will build the containers, so it may take a little while longer.

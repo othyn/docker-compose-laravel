@@ -18,8 +18,6 @@ services:
     depends_on:
       - database
       - app
-    logging:
-        driver: none
 
   database:
     image: mysql:5.7.28
@@ -41,6 +39,8 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: database
     command: --init-file /data/application/base.sql
+    logging:
+        driver: none
 
   app:
     container_name: app

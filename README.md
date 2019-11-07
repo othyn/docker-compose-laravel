@@ -221,11 +221,4 @@ Here are the exposed port maps for the containers:
 | app       | 9000      | 9000           |
 
 ## Changelog
-This is the documented history of the project.
-
-* **v1.0**
-  * Inital release.
-  * `docker-compose` configured for Laravel projects.
-  * Supports integration into new and existing projects.
-  * Assisting bash scripts for project setup.
-  * Extensive documentation.
+[View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).

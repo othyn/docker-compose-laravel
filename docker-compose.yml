@@ -10,7 +10,7 @@ services:
     restart: 'no'
     volumes:
       - ${APP_PATH:-./src}:/var/www
-      - .${PROJECT_PATH}/docker/webserver/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/webserver/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - laravel
     ports:
@@ -24,9 +24,9 @@ services:
     container_name: database
     restart: 'no'
     volumes:
-      - .${PROJECT_PATH}/docker/database/mysql.cnf:/etc/mysql/my.cnf
-      - .${PROJECT_PATH}/docker/database/persist:/var/lib/mysql
-      - .${PROJECT_PATH}/docker/database/base.sql:/base.sql
+      - ./docker/database/mysql.cnf:/etc/mysql/my.cnf
+      - ./docker/database/persist:/var/lib/mysql
+      - ./docker/database/base.sql:/base.sql
     networks:
       - laravel
     ports:
@@ -47,13 +47,13 @@ services:
     restart: 'no'
     volumes:
       - ${APP_PATH:-./src}:/var/www
-      - .${PROJECT_PATH}/docker/app/entrypoint.sh:/entrypoint.sh
+      - ./docker/app/entrypoint.sh:/entrypoint.sh
     networks:
       - laravel
     ports:
       - 9000:9000
     build:
       context: .
-      dockerfile: .${PROJECT_PATH}/docker/app/dockerfile
+      dockerfile: ./docker/app/dockerfile
     entrypoint: /entrypoint.sh
     command: php-fpm

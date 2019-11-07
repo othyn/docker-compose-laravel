@@ -21,19 +21,6 @@ else
 fi
 
 # Step 2
-# Create a symlink to the parent directory, just so you can run
-# the docker-compose commands from project root. A little quality
-# of life addition.
-DOCKER_DIR="docker/docker-compose.yml"
-DOCKER_SYMLINK_DIR="./../docker-compose.yml"
-if [[ -L "$DOCKER_SYMLINK_DIR" ]]; then
-    echo "> Removing existing symlink at '$DOCKER_SYMLINK_DIR'."
-    rm "$DOCKER_SYMLINK_DIR"
-fi
-echo "> Symlinking '$DOCKER_DIR' to '$DOCKER_SYMLINK_DIR'."
-ln -s "$DOCKER_DIR" "$DOCKER_SYMLINK_DIR"
-
-# Step 3
 # Build the Docker images!
 echo "> Build the Docker containers."
 docker-compose build

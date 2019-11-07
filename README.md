@@ -73,7 +73,7 @@ Excellent! That has now added the repo as a submodule, although be sure to commi
 $ docker/install.existing.sh
 ```
 
-The installation script does one of two things. First, it creates a working copy of that `.env` file for you. Secondly, it adds a nice quality of life addition to your projects root directory, a symlink to the `docker/docker-compose.yml`, so that you can run the `$ docker-compose` commands in the root of your projects directory.
+The installation script does one of two things. First, it creates a working copy of that `.env` file for you.
 
 That's it! Magic. 🎉
 
@@ -92,7 +92,7 @@ That will download and merge the latest version of the submodule repo, then run 
 That's it! Magic. 🎉
 
 ## Usage
-Once the project has been [Setup](#setup), it's very simple to use. Lauch docker composer from within the root directory of the project, the one with the `docker-compose.yml` file in it and away you go! The first time it is run, docker will build the containers, so it may take a little while longer.
+Once the project has been [Setup](#setup), it's very simple to use. Lauch docker composer from within the root directory of the project if it is a **new project**. If it is an **existing project**, first `cd` into the `docker` directory, the directory containing the submodule contents. As long as you are in the directory containing the `docker-compose.yml` file in it, away you go! The first time it is run, docker will build the containers, so it may take a little while longer.
 
 ```bash
 $ docker-compose up
@@ -168,21 +168,6 @@ $ cp .env.example .env
 ```
 
 Although, this is already done during the setup of an [Existing Project](#existing-project) and again, is not required unless you need to change one of the following values:
-
-`PROJECT_PATH`
-```env
-### ### ### ### ### ### ### ### ###
-# Point to the path of this project
-# on the host.
-#
-#        New app: <blank>
-#   Existing app: /docker
-#
-PROJECT_PATH=/docker
-### ### ### ### ### ### ### ### ###
-```
-
-As the `.env` file won't exist for new installations, it defaults in the `docker-compose.yml` to use the `./` directory, as the variable will be blank. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the expected submodule directory as it will only exist on [Existing Project](#existing-project) installations. Saving you a step!
 
 `APP_PATH`
 ```env

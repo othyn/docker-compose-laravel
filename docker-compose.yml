@@ -56,3 +56,4 @@ services:
       context: .
       dockerfile: ./docker/app/dockerfile
     entrypoint: /entrypoint.sh
+    command: php-fpm

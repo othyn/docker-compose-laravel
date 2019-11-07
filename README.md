@@ -158,15 +158,39 @@ There are elements of this docker project that you can configure for you project
 This is the configuration for all of the core services that are configured, the `app`, `database` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and by a directory with the service name in the `docker` directory in the root directory.
 
 ### .env
-There is a `.env` file that is currently optional for the project to run on [New Projects](#new-project), but essential to run on [Existing Projects](#existing-project) (see installation steps). By default, for new installations, the `.env` file won't exist, as at the moment all variables contained within it aren't required for new installations and it saves unnecessary setup steps. Although can be used if you do a quick `$ cp .env.example .env`, this is done during the setup of an [Existing Project](#existing-project).
+There is a `.env` file that is currently optional for the project to run on [New Projects](#new-project), but essential to run on [Existing Projects](#existing-project) (see installation steps).
 
-#### `APP_PATH`
+By default, for new installations, the `.env` file won't exist, as at the moment all variables contained within it aren't required for new installations and it saves unnecessary setup steps. Although can be used if you do a quick:
+
+```bash
+$ cd ~/git/existing-docker-laravel-project/docker
+$ cp .env.example .env
 ```
+
+Although, this is already done during the setup of an [Existing Project](#existing-project) and again, is not required unless you need to change one of the following values:
+
+`PROJECT_PATH`
+```env
+### ### ### ### ### ### ### ### ###
+# Point to the path of this project
+# on the host.
+#
+#        New app: <blank>
+#   Existing app: /docker
+#
+PROJECT_PATH=/docker
+### ### ### ### ### ### ### ### ###
+```
+
+As the `.env` file won't exist for new installations, it defaults in the `docker-compose.yml` to use the `./` directory, as the variable will be blank. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the expected submodule directory as it will only exist on [Existing Project](#existing-project) installations. Saving you a step!
+
+`APP_PATH`
+```env
 ### ### ### ### ### ### ### ### ###
 # Point to the path of your Laravel
 # application code on the host.
 #
-#        New app: ./src
+#        New app: <blank>
 #   Existing app: ../
 #
 APP_PATH=../

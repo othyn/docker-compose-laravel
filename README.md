@@ -1,5 +1,5 @@
 # 🐳 Docker Compose for Laravel 🐘
-My Docker Compose setup for Laravel projects, inspired by [this repo](https://github.com/aschmelyun/docker-compose-laravel).
+A Docker Compose setup for Laravel projects, inspired by [this repo](https://github.com/aschmelyun/docker-compose-laravel).
 
 ## Table of contents
 * [docker-compose-laravel](#docker-compose-laravel)

@@ -10,6 +10,8 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
   * [Existing Project](#existing-project)
     * [Update an Existing Project](#update-an-existing-project)
 * [Usage](#usage)
+  * [Composer](#composer)
+  * [Yarn](#yarn)
 * [Configuration](#configuration)
   * [Services](#services)
     * [.env](#.env)

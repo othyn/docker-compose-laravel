@@ -151,11 +151,42 @@ $ docker-compose down
 
 You can use `stop` instead of `down` to just stop the running container. The above command, `down`, will both stop and remove the container and its associated networks. You can also specify `--volumes` as an additional flag to remove any associated volumes, and the `--rmi <all|local>` flag to remove associated images.
 
+### Composer
+There is a composer image also built into the Docker Compose stack, allowing composer to automatically run on your project when the `$ docker-compose up` command is run. Although, if you wish to run a `$ composer install` at any point manually, you can just run:
+
+```bash
+$ docker-compose run --rm composer
+```
+
+This is because we haven't provided a command to run, so `$ docker-compose run` will `run` the `command` that is listed against the `composer` `service` defined in `docker-compose.yml`. The `--rm` flag will simply clean up the container that it has used to run the command after its been executed. If you wish to run any other composer commands with this, go ahead and do so, some examples:
+
+```bash
+$ docker-compose run --rm composer composer update                      # to update composer dependencies
+$ docker-compose run --rm composer composer install <new dependency>    # to install new composer dependencies
+$ docker-compose run --rm composer composer remove <old dependency>     # to remove old composer dependencies
+```
+
+### Yarn
+There is a node image also built into the Docker Compose stack, allowing yarn to automatically run on your project when the `$ docker-compose up` command is run. Although, if you wish to run a `$ yarn install` at any point manually, you can just run:
+
+```bash
+$ docker-compose run --rm node
+```
+
+This is because we haven't provided a command to run, so `$ docker-compose run` will `run` the `command` that is listed against the `node` `service` defined in `docker-compose.yml`. The `--rm` flag will simply clean up the container that it has used to run the command after its been executed. If you wish to run any other yarn commands with this, go ahead and do so, some examples:
+
+```bash
+$ docker-compose run --rm node yarn upgrade                     # to update yarn dependencies
+$ docker-compose run --rm node yarn install <new dependency>    # to install new yarn dependencies
+$ docker-compose run --rm node yarn remove <old dependency>     # to remove old yarn dependencies
+$ docker-compose run --rm node yarn <scripts>                   # run any package.json scripts, e.g. dev, watch, hot, build, prod|production, etc.
+```
+
 ## Configuration
 There are elements of this docker project that you can configure for you project if you require extra functionality. Obviously, at the end of the day this is just a bog standard Docker project, so you can go to town with any changes you wish. But these are the main areas that are easy adaptable.
 
 ### Services
-This is the configuration for all of the core services that are configured, the `app`, `database` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and by a directory with the service name in the `docker` directory in the root directory.
+This is the configuration for all of the core services that are configured; `app`, `composer`, `database`, `node` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and if necessary, accompanied also by a directory with the service name in the `docker` directory, within the root directory.
 
 ### .env
 There is a `.env` file that is currently optional for the project to run on [New Projects](#new-project), but essential to run on [Existing Projects](#existing-project) (see installation steps).

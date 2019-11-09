@@ -175,7 +175,7 @@ fi
 if ! RESULT=$(rm "update.sh" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(rm "LICENCE" 2>&1) ; then
+if ! RESULT=$(rm "LICENSE" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 if ! RESULT=$(rm "README.md" 2>&1) ; then

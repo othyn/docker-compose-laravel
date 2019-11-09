@@ -256,7 +256,7 @@ logDone
 # Git push.
 ##
 log "Pushing to remote"
-if ! RESULT=$(git add . 2>&1) ; then
+if ! RESULT=$(git push 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

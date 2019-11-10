@@ -60,7 +60,7 @@ $ git submodule add git@github.com:othyn/docker-compose-laravel.git docker
 Excellent! That has now added the repo as a submodule, although be sure to commit the addition. You can now view that submodule it in the project's root directory as with any other directory. Now, let's run that installation script:
 
 ```bash
-$ docker/install.existing.sh
+$ docker/update.sh
 ```
 
 The installation script does one of two things. First, it creates a working copy of that `.env` file for you.
@@ -74,7 +74,7 @@ To update the submodule in future, use the following command:
 ```bash
 $ cd ~/git/existing-docker-laravel-project
 $ git submodule update --remote --merge
-$ docker/install.existing.sh
+$ docker/update.sh
 ```
 
 That will download and merge the latest version of the submodule repo, then run the installation script to ensure that the module has all of the update steps run.

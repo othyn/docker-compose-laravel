@@ -17,19 +17,22 @@ RESET="\033[0m"
 ##
 # Let's begin!
 ##
+clear
 printf "[${BLUE}Docker Compose Laravel${RESET}: New project installation]\n"
 
 ##
 # Helper function for displaying hanging log lines.
 ##
 log() {
-    printf "> ${1}...\t"
+    printf "> %-36s" "${1}..."
+    #           ^^-- Needs to be set to the length of the longest log message, it's
+    #                purely aesthetic, but it aligns all the log termination messages.
 }
 
 ##
 # Flag that the script is processing arguments.
 ##
-log "Processing arguments"
+log "Processing provided arguments"
 
 ##
 # Helper functions for displaying termination log lines.

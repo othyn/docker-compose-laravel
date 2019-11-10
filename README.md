@@ -38,7 +38,7 @@ New remote: git@github.com:othyn/new-docker-laravel-project.git
 
 Next, run this handy installation script, [`install.sh`](install.sh) that does all the hard work for you! Just pass in that new remote you setup above and where you'd like it to exist locally on your machine at it will do the rest:
 
-**Before running!** Please ensure you've read and understood what the script does before running it. Sure, you may learn something from it, but you should never run arbitrary code on your machine without first checking the source. A good habit to get into if you aren't already in it!
+***Before running!** Please ensure you've read and understood what the script does. Sure, you may learn something from it, but you should never run arbitrary code on your machine without first checking the source. A good habit to get into if you aren't already in it!*
 
 ```bash
 $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \

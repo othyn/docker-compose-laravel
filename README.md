@@ -36,28 +36,14 @@ Create a new repo on GitHub, or your git host of choice. Once created, grab and 
 New remote: git@github.com:othyn/new-docker-laravel-project.git
 ```
 
-If it is a new project, clone this repo to a desired directory, making sure that the directory aligns with the new repo name (not essential, but good practice):
+Next, run this handy installation script, `install.sh` that does all the hard work for you! Just pass in that new remote you setup above and where you'd like it to exist locally on your machine at it will do the rest:
 
 ```bash
-$ git clone git@github.com:othyn/docker-compose-laravel.git ~/git/new-docker-laravel-project
+$ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
+  bash -s -- -r git@github.com:othyn/new-docker-laravel-project.git -l ~/git/new-docker-laravel-project
 ```
 
-Once cloned, time to alter the remote to point at your new project and set the new upstream branch. We will now need that remote you saved to one side earlier:
-
-```bash
-$ cd ~/git/new-docker-laravel-project
-$ git remote set-url origin git@github.com:othyn/new-docker-laravel-project.git
-$ git push -u origin master
-```
-
-Awesome, so we now have a new working project directory, you can use the [Laravel installation tool](https://laravel.com/docs/master/installation#installing-laravel) and follow the [Laravel configuration steps](https://laravel.com/docs/master/installation#configuration) to create a new project in the `src` directory:
-
-```bash
-$ cd ~/git/new-docker-laravel-project
-$ laravel new src --force
-```
-
-Now you can get to building that Laravel app you've always wanted to.
+Now to continue on your new project adventure, begin with the [Laravel configuration steps](https://laravel.com/docs/master/installation#configuration) and have some fun.
 
 That's it! Magic. 🎉
 

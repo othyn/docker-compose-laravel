@@ -244,6 +244,42 @@ fi
 logDone
 
 ##
+# Configure new Laravel project.
+##
+log "Configure new Laravel project"
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=database/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=database/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=3306/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=3306/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=homestead/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=homestead/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=homestead/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=homestead/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=secret/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=secret/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+logDone
+
+##
 # Commit the new Laravel project.
 ##
 log "Committing new Laravel project"

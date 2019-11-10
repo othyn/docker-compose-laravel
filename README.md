@@ -21,6 +21,7 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
   * [Building](#building)
 * [Reference](#reference)
   * [Ports](#ports)
+  * [Database Access](#database-access)
 * [Changelog](#changelog)
 
 ## Setup
@@ -240,6 +241,17 @@ Here are the exposed port maps for the containers:
 | webserver | 8080      | 80             |
 | database  | 3306      | 3306           |
 | app       | 9000      | 9000           |
+
+### Database Access
+This Here are the required database credentials for your `.env` file:
+
+| `.env` Key   | Value     |
+|--------------|-----------|
+| DB_HOST      | database  |
+| DB_PORT      | 3306      |
+| DB_DATABASE  | homestead |
+| DB_USERNAME  | homestead |
+| DB_PASSWORD  | secret    |
 
 ## Changelog
 [View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).

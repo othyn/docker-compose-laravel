@@ -235,7 +235,7 @@ logDone
 # Create a new Laravel project.
 ##
 log "Creating a new Laravel project"
-if ! RESULT=$(laravel new "src" --force 2>&1) ; then
+if ! RESULT=$(laravel new "src" --force --quiet 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

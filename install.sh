@@ -60,12 +60,10 @@ cat << EOF
     -l      The new local directory this new project should reside in.
                 E.g. ~/git/new-docker-laravel-project
 
-    [optional]
+    [options]
     -p      Use HTTPS clone method instead of SSH.
     -f      Force the local directory, if it exists, it will be removed.
-
-    [extra]
-    -h      Brings up this help screen
+    -h      Brings up this help screen.
 
 EOF
 exit 0

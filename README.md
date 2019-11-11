@@ -48,7 +48,7 @@ $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/ins
   -l ~/git/new-docker-laravel-project
 ```
 
-The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag:
+The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag, just for reference:
 
 ```bash
 #    Usage: $0 -r <new-remote-repo> -l <new-local-repo> [options]

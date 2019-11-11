@@ -14,7 +14,7 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
   * [Yarn](#yarn)
 * [Configuration](#configuration)
   * [Services](#services)
-    * [.env](#.env)
+    * [.env](#env)
     * [app](#app)
     * [database](#database)
     * [webserver](#webserver)
@@ -43,7 +43,26 @@ Next, run this handy installation script [`install.sh`](install.sh), that does a
 
 ```bash
 $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
-  bash -s -- -r git@github.com:othyn/new-docker-laravel-project.git -l ~/git/new-docker-laravel-project
+  bash -s -- \
+  -r git@github.com:othyn/new-docker-laravel-project.git \
+  -l ~/git/new-docker-laravel-project
+```
+
+The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag:
+
+```bash
+#    Usage: $0 -r <new-remote-repo> -l <new-local-repo> [options]
+#
+#    [required]
+#    -r      New, empty, remote repo to setup the new project against.
+#                E.g. git@github.com:othyn/new-docker-laravel-project.git
+#    -l      The new local directory this new project should reside in.
+#                E.g. ~/git/new-docker-laravel-project
+#
+#    [options]
+#    -p      Use HTTPS clone method instead of SSH.
+#    -f      Force the local directory, if it exists, it will be removed.
+#    -h      Brings up this help screen.
 ```
 
 Now to continue on your new project adventure, begin with the [Laravel configuration steps](https://laravel.com/docs/master/installation#configuration) and have some fun.

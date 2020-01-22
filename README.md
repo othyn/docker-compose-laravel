@@ -294,6 +294,8 @@ Here are a few packages that I highly recommend to take your Laravel project to 
   - Both have similar implementations, but handle the same thing. Easy management of CORS within your Laravel app, personally I think Laravel should have better handling of this built in.
 - [laravel-compass](https://github.com/davidhsianturi/laravel-compass)
   - A superb sub-application that allows for an API consumption client right in as part of your application. This is a fantastic tool that I always install alongside API apps.
+- [laravel-airlock](https://github.com/laravel/airlock) or [laravel-passport](https://github.com/laravel/passport)
+  - Both authentication layers for your application, for SPA's or just ways to easily integrate OAuth. Either way, well documented first-party plugins that are staple for these use cases.
 
 ## Changelog
 [View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).

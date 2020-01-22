@@ -274,7 +274,7 @@ This Here are the required database credentials for your `.env` file:
 | DB_PASSWORD  | secret    |
 
 ## Recommended Packages
-Here are a few packages that I highly recommend to take your Laravel project to the next level.
+Here are a few packages that I highly recommend to take your Laravel project to the next level. Of course, if you want to take your self to the next level, learn anything new or even top up your skills, there is nothing better than [Laracasts](https://laracasts.com). That may have come off as woefully cheesy or a marketing pitch, but I don't care, its a genuinely fantastic resource that is one of the best places on the web to continually learn this industry.
 
 - [laravel-initializer](https://github.com/mad-web/laravel-initializer)
   - An excellent Laravel plugin that allows you to automate aspects of your Laravel environment, be it setting up a local environment from scratch or deploying to remote production environments.

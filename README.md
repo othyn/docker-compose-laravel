@@ -22,6 +22,7 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
 * [Reference](#reference)
   * [Ports](#ports)
   * [Database Access](#database-access)
+* [Recommended Packages](#recommended-packages)
 * [Changelog](#changelog)
 
 ## Setup
@@ -271,6 +272,28 @@ This Here are the required database credentials for your `.env` file:
 | DB_DATABASE  | homestead |
 | DB_USERNAME  | homestead |
 | DB_PASSWORD  | secret    |
+
+## Recommended Packages
+Here are a few packages that I highly recommend to take your Laravel project to the next level.
+
+- [laravel-initializer](https://github.com/mad-web/laravel-initializer)
+  - An excellent Laravel plugin that allows you to automate aspects of your Laravel environment, be it setting up a local environment from scratch or deploying to remote production environments.
+- [laravel-ide-helper](https://github.com/barryvdh/laravel-ide-helper)
+  - This is an excellent tool if using Laravel within an IDE (or VSCode with PHP extensions, [like this one](https://github.com/bmewburn/vscode-intelephense)). It generates class maps for the application and instructs the IDE on how to analyse and traverse your Laravel application.
+- [laravel-enum](https://github.com/BenSampo/laravel-enum)
+  - A brilliant plugin that does exactly what it says, adds 'enums' to Laravel. Very handy!
+- [laravel-package](https://github.com/Jhnbrn90/LaravelPackage.com)
+  - Okay, so not a package per-say, but it is an incredible resource on creating them.
+- [phpunit-pretty-print](https://github.com/sempro/phpunit-pretty-print)
+  - Not Laravel, but a PHPUnit beautifier. Makes it much easier to work with the output.
+- [symfony](https://symfony.com/)
+  - Again, not Laravel, technically. For those that don't know, Laravel is built ontop of the Symfony framework, sharing a lot of its core. It's components are excellent and well documented, would highly recommend seeing if they have a utility class before you create one, they usually do! Saves re-inventing the wheel and keeps things maintainable.
+- [laravel-cross-database-subqueries](https://github.com/hoyvoy/laravel-cross-database-subqueries)
+  - A mouth full, but does what it says. Laravel has a bug, I think its a bug, where it ignores the models connection definition when using subqueries when its perfectly capable of doing so and I think, is what is expected behavior.
+- [laravel-cors](https://github.com/fruitcake/laravel-cors) or [laravel-cors](https://github.com/spatie/laravel-cors)
+  - Both have similar implementations, but handle the same thing. Easy management of CORS within your Laravel app, personally I think Laravel should have better handling of this built in.
+- [laravel-compass](https://github.com/davidhsianturi/laravel-compass)
+  - A superb sub-application that allows for an API consumption client right in as part of your application. This is a fantastic tool that I always install alongside API apps.
 
 ## Changelog
 [View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).

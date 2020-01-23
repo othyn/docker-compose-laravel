@@ -31,7 +31,7 @@ services:
     image: composer:latest
     container_name: composer
     volumes:
-      - ./:/app
+      - ${APP_PATH:-./src}:/app
     working_dir: /app
     command: composer install
 
@@ -39,7 +39,7 @@ services:
     image: node:lts
     container_name: node
     volumes:
-      - ./:/app
+      - ${APP_PATH:-./src}:/app
     working_dir: /app
     command: yarn install
 

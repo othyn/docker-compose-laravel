@@ -24,7 +24,15 @@ printf "[${BLUE}Docker Compose Laravel${RESET}: New project installation]\n"
 # Helper function for displaying hanging log lines.
 ##
 log() {
-    printf "> %-36s" "${1}..."
+    # OPTIONAL: This nicely formats numbers passed as the second param
+    if [ "${2}" = "" ]; then
+        PRINT_STRING="${1}..."
+    else
+        PRINT_NUMBER=$(echo "${2}" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta')
+        PRINT_STRING="${1}: ${PRINT_NUMBER}..."
+    fi
+
+    printf "> %-36s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }

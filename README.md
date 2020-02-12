@@ -298,6 +298,8 @@ Of course, if you want to take your self to the next level, learn anything new o
   - A superb sub-application that allows for an API consumption client right in as part of your application. This is a fantastic tool that I always install alongside API apps.
 - [laravel-airlock](https://github.com/laravel/airlock) or [laravel-passport](https://github.com/laravel/passport)
   - Both authentication layers for your application, for SPA's or just ways to easily integrate OAuth. Either way, well documented first-party plugins that are staple for these use cases.
+- [laravel-deployer](https://github.com/lorisleiva/laravel-deployer)
+  - A wrapper around [deployer.org](https://github.com/deployphp/deployer) for Laravel, it allows easy access and customisation through Laravel's tool chain. It maps the relevant commands to artisan and places the deployer config within Laravel's for tidiness and scoping. Very handy for semi-autonomous and non-CI/CD deployments!
 
 ## Changelog
 [View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).

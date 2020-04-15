@@ -84,7 +84,7 @@ Excellent! That has now added the repo as a submodule, although be sure to commi
 $ docker/update.sh
 ```
 
-The installation script does one of two things. First, it creates a working copy of that `.env` file for you.
+As a bonus, if one doesn't already exist, it will go ahead and create a working copy of the `.env` file for you.
 
 That's it! Magic. 🎉
 
@@ -231,17 +231,17 @@ The `dockerfile` for the `app` contains all provisioning steps within the build 
 
 The `entrypoint.sh` script is copied in and executed when the container is brought `up`, so this runs things like `artisan` commands (migrations, seeders, etc.) and such to get Laravel in a ready state. Add anything in to this file that you need running every time the container is upped, not built.
 
-The `php.ini` file is any PHP ini configuration you wish to set, this overwrites the system default `php.ini`.
+The `php.ini` file is any PHP ini configuration you wish to set, this merges into the system default `php.ini`, as defined in the [documentation for the docker image](https://hub.docker.com/_/php), under 'Configuration'. (Documentation page doesn't support URL fragments, no ID's!)
 
 #### database
 The `persist` directory is volume mapped to the MySQL directory on the docker container, so that the containers DB is persisted across container instances.
 
 The `base.sql` patch file is run by the MySQL Docker container when its upped, so place any SQL statements in there that you wish to be run. E.g. creating databases.
 
-The `mysql.conf` file is any MySQL configuration you wish to set, this overwrites the system default `mysql.conf`.
+The `mysql.conf` file is any MySQL configuration you wish to set, this merges into the system default `mysql.conf`, as defined in the [documentation for the docker image](https://hub.docker.com/_/mysql), under 'Using a custom MySQL configuration file'. (Documentation page doesn't support URL fragments, no ID's!)
 
 #### webserver
-The `nginx.conf` file is any NGINX configuration you wish to set, this overwrites the system default `nginx.conf`.
+The `nginx.conf` file is any NGINX configuration you wish to set, this merges into the system default `nginx.conf`, as defined in the [documentation for the docker image](https://hub.docker.com/_/nginx), under 'Complex configuration'. (Documentation page doesn't support URL fragments, no ID's!)
 
 ### Building
 Should you change parts of the docker container, make sure to re-build the containers!

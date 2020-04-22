@@ -29,6 +29,7 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
   - [Database Access](#database-access)
 - [Recommended Packages](#recommended-packages)
 - [Changelog](#changelog)
+- [Versioning](#versioning)
 
 ## Setup
 
@@ -359,3 +360,7 @@ Of course, if you want to take your self to the next level, learn anything new o
 ## Changelog
 
 [View the repo's releases to see the change history](https://github.com/othyn/docker-compose-laravel/releases).
+
+## Versioning
+
+[This project uses Semantic Versioning](https://semver.org/).

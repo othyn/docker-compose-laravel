@@ -18,7 +18,7 @@ RESET="\033[0m"
 # Let's begin!
 ##
 clear
-printf "[${BLUE}Docker Compose Laravel${RESET}: New project installation]\n"
+printf "[${BLUE}Docker Compose Laravel${RESET}: Project installation]\n"
 
 ##
 # Helper function for displaying hanging log lines.
@@ -60,15 +60,15 @@ logError() {
 showHelp() {
 cat << EOF
 
-    Usage: $0 -r <new-remote-repo> -l <new-local-repo> [options]
+    Usage: $0 -l <new-local-repo> [options]
 
     [required]
-    -r      New, empty, remote repo to setup the new project against.
-                E.g. git@github.com:othyn/new-docker-laravel-project.git
-    -l      The new local directory this new project should reside in.
+    -l      The local directory of the project to Docker-ise.
                 E.g. ~/git/new-docker-laravel-project
 
     [options]
+    -r      New, empty, remote repo to setup a new project against.
+                E.g. git@github.com:othyn/new-docker-laravel-project.git
     -p      Use HTTPS clone method instead of SSH.
     -f      Force the local directory, if it exists, it will be removed.
     -h      Brings up this help screen.
@@ -81,6 +81,7 @@ exit 0
 # Set default args.
 ##
 REPO_DOCKER="git@github.com:othyn/docker-compose-laravel.git"
+NEW_PROJECT=0
 REPO_REMOTE=""
 REPO_LOCAL=""
 USE_FORCE=0
@@ -93,6 +94,7 @@ while getopts ":r:l:pfh" OPT
 do
     case $OPT in
         r)
+            NEW_PROJECT=1
             REPO_REMOTE="${OPTARG}"
             ;;
         l)
@@ -114,11 +116,6 @@ do
     esac
 done
 
-# Validate the remote repo option is provided
-if [ -z "$REPO_REMOTE" ]; then
-    logError "A remote repo is required." 1
-fi
-
 # Validate the local repo option is provided
 if [ -z "$REPO_LOCAL" ]; then
     logError "A local repo is required." 1
@@ -130,12 +127,14 @@ fi
 logDone
 
 ##
-# Check the supplied local directory.
+# Check the supplied local directory for existence if a new project has been instructed to be setup.
+# We don't want it to exist ideally, but we can handle it if the user has instructed us to do so.
 #
 # https://superuser.com/questions/363444/how-do-i-get-the-output-and-exit-value-of-a-subshell-when-using-bash-e
 ##
-log "Checking local directory"
-if [[ -d "${REPO_LOCAL}" ]] ; then
+if [[ -d "${REPO_LOCAL}" ]] && [[ "${NEW_PROJECT}" == "1" ]] ; then
+    log "Checking local directory"
+
     if [[ "${USE_FORCE}" == "0" ]] ; then
         logError "There is already a local directory at '${REPO_LOCAL}' and the force option was not provided. Please provide the '-f' option or remove the directroy first and try again." 1
     else
@@ -145,15 +144,79 @@ if [[ -d "${REPO_LOCAL}" ]] ; then
             logError "${RESULT}" $?
         fi
     fi
+
+    logDone
 fi
-logDone
+
+##
+# Check the supplied local directory for existence if an existing project integration has been instructed to be setup.
+# We need the directory to exist to proceed.
+#
+# https://superuser.com/questions/363444/how-do-i-get-the-output-and-exit-value-of-a-subshell-when-using-bash-e
+##
+if [[ ! -d "${REPO_LOCAL}" ]] && [[ "${NEW_PROJECT}" == "0" ]] ; then
+    log "Checking local directory"
+
+    logError "The local directory was not found at '${REPO_LOCAL}', the installation cannot proceed." 1
+
+    logDone
+fi
 
 ##
 # Clone the repo.
 ##
 log "Cloning remote to local"
-if ! RESULT=$(git clone "${REPO_DOCKER}" "${REPO_LOCAL}" 2>&1) ; then
-    logError "${RESULT}" $?
+if [[ "${NEW_PROJECT}" == "1" ]] ; then
+    if ! RESULT=$(git clone "${REPO_DOCKER}" "${REPO_LOCAL}" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+else
+    # As we are working with an existing project, we need to stick it somewhere temporarily
+    REPO_LOCAL_TEMP="${REPO_LOCAL}_temp"
+
+    if ! RESULT=$(git clone "${REPO_DOCKER}" "${REPO_LOCAL_TEMP}" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+
+    # Copy the docker folder to the actual location from the temp clone
+    if [[ -d "${REPO_LOCAL}/docker" ]] ; then
+        if ! RESULT=$(rm -rf "${REPO_LOCAL}/docker" 2>&1) ; then
+            logError "${RESULT}" $?
+        fi
+    fi
+
+    if ! RESULT=$(cp -R "${REPO_LOCAL_TEMP}/docker" "${REPO_LOCAL}/docker" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+
+    # Copy the default env file to the actual location from the temp clone
+    if [[ -d "${REPO_LOCAL}/default.env" ]] ; then
+        if ! RESULT=$(rm -rf "${REPO_LOCAL}/default.env" 2>&1) ; then
+            logError "${RESULT}" $?
+        fi
+    fi
+
+    if ! RESULT=$(cp -R "${REPO_LOCAL_TEMP}/default.env" "${REPO_LOCAL}/default.env" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+
+    # Copy the docker compose file to the actual location from the temp clone
+    if [[ -d "${REPO_LOCAL}/docker-compose.yml" ]] ; then
+        if ! RESULT=$(rm -rf "${REPO_LOCAL}/docker-compose.yml" 2>&1) ; then
+            logError "${RESULT}" $?
+        fi
+    fi
+
+    if ! RESULT=$(cp -R "${REPO_LOCAL_TEMP}/docker-compose.yml" "${REPO_LOCAL}/docker-compose.yml" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+
+    # Clean up the temp clone
+    if ! RESULT=$(rm -rf "${REPO_LOCAL_TEMP}" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+
+    REPO_LOCAL_TEMP=""
 fi
 logDone
 
@@ -169,64 +232,70 @@ fi
 logDone
 
 ##
-# Clean the project of git and a few unnecessary files.
+# The following steps are new project initialisation, so only need to occur during
+# new project setup.
 ##
-log "Cleaning project"
-if ! RESULT=$(rm -rf ".git" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(rm ".env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(rm "install.sh" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(rm "update.sh" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(rm "LICENSE" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(rm "README.md" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-logDone
+if [[ "${NEW_PROJECT}" == "1" ]] ; then
+    ##
+    # Clean the project of git and a few unnecessary files.
+    ##
+    log "Cleaning project"
+    if ! RESULT=$(rm -rf "./.git" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(rm "./.env.example" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(rm "./install.sh" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(rm "./update.sh" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(rm "./LICENSE" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(rm "./README.md" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 
-##
-# Init a new repo.
-##
-log "Creating a new local repo"
-if ! RESULT=$(git init 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-logDone
+    ##
+    # Init a new repo.
+    ##
+    log "Creating a new local repo"
+    if ! RESULT=$(git init 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 
-##
-# Set the remote.
-##
-log "Setting remote"
-if ! RESULT=$(git remote add origin "${REPO_REMOTE}" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-logDone
+    ##
+    # Set the remote.
+    ##
+    log "Setting remote"
+    if ! RESULT=$(git remote add origin "${REPO_REMOTE}" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 
-##
-# Fetch remote repos.
-##
-log "Fetching remote branches"
-if ! RESULT=$(git fetch 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-logDone
+    ##
+    # Fetch remote repos.
+    ##
+    log "Fetching remote branches"
+    if ! RESULT=$(git fetch 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 
-##
-# Checkout and track remote repo.
-##
-log "Checking out and tracking remote"
-if ! RESULT=$(git checkout --track origin/master --force 2>&1) ; then
-    logError "${RESULT}" $?
+    ##
+    # Checkout and track remote repo.
+    ##
+    log "Checking out and tracking remote"
+    if ! RESULT=$(git checkout --track origin/master --force 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 fi
-logDone
 
 ##
 # Commit the base docker project.
@@ -235,64 +304,105 @@ log "Committing base docker project"
 if ! RESULT=$(git add . 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(git commit -m "[AUTO] Initial commit. Base docker project from ${REPO_DOCKER}." 2>&1) ; then
+if ! RESULT=$(git commit -m "[AUTO] Implement base docker project from ${REPO_DOCKER}." 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone
 
 ##
-# Create a new Laravel project.
+# Laravel installation steps only required on a new installation.
 ##
-log "Creating a new Laravel project"
-if ! RESULT=$(laravel new "src" --force --quiet 2>&1) ; then
+if [[ "${NEW_PROJECT}" == "1" ]] ; then
+    ##
+    # Create a new Laravel project.
+    ##
+    log "Creating a new Laravel project"
+    if ! RESULT=$(laravel new ./ --force --quiet 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
+
+
+    ##
+    # Commit the the new Laravel project.
+    ##
+    log "Committing the new Laravel project"
+    if ! RESULT=$(git add . 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(git commit -m "[AUTO] Created a new Laravel installation." 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
+fi
+
+##
+# Get a hold of the default.env values to be merged into the local installation
+# .env and env.example files.
+#
+# https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+##
+export $(egrep -v '^#' ./default.env | xargs)
+
+##
+# Configure the Laravel project.
+##
+log "Configure the Laravel project"
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "src/.env.example" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "src/.env" 2>&1) ; then
+    logError "${RESULT}" $?
+fi
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "src/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone
 
 ##
-# Configure new Laravel project.
+# Clean up the temporary default.env file.
 ##
-log "Configure new Laravel project"
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=database/" "src/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=database/" "src/.env" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=3306/" "src/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=3306/" "src/.env" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=homestead/" "src/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=homestead/" "src/.env" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=homestead/" "src/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=homestead/" "src/.env" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=secret/" "src/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=secret/" "src/.env" 2>&1) ; then
+log "Clean up the temporary default.env file"
+if ! RESULT=$(rm "./default.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone
 
 ##
-# Commit the new Laravel project.
+# Commit the the Laravel project.
 ##
-log "Committing new Laravel project"
+log "Committing the Laravel project"
 if ! RESULT=$(git add . 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(git commit -m "[AUTO] Installed Laravel in './src'." 2>&1) ; then
+if ! RESULT=$(git commit -m "[AUTO] Configured Laravel installation after installing docker configuration." 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

@@ -33,9 +33,11 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
 
 Setup is fairly straight forward, there are no installation steps for the project itself, just ensure that the prerequisites are met and you are off to the races!
 
+Use the scripts in this repo at your own risk. Please read through the code first and be familiar with what it is doing and make a judgment call. I accept no liability.
+
 ### Prerequisites
 
-Ensure that [Docker is installed](https://docs.docker.com/docker-for-mac/install/) and up to date on your system. Once installed, configure with your required preferences and ensure it is running. Make sure you are logged in to Docker Hub via the app so that it can download the container images.
+Ensure that [Docker is installed](https://docs.docker.com/docker-for-mac/install/) and up to date on your system. Once installed, configure with your required preferences and ensure it is running.
 
 ### New Project
 
@@ -59,15 +61,15 @@ $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/ins
 The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag, just for reference:
 
 ```sh
-#    Usage: $0 -r <new-remote-repo> -l <new-local-repo> [options]
+#    Usage: $0 -l <new-local-repo> [options]
 #
 #    [required]
-#    -r      New, empty, remote repo to setup the new project against.
-#                E.g. git@github.com:othyn/new-docker-laravel-project.git
-#    -l      The new local directory this new project should reside in.
+#    -l      The local directory of the project to Docker-ise.
 #                E.g. ~/git/new-docker-laravel-project
 #
 #    [options]
+#    -r      New, empty, remote repo to setup a new project against.
+#                E.g. git@github.com:othyn/new-docker-laravel-project.git
 #    -p      Use HTTPS clone method instead of SSH.
 #    -f      Force the local directory, if it exists, it will be removed.
 #    -h      Brings up this help screen.
@@ -79,40 +81,33 @@ That's it! Magic. 🎉
 
 ### Existing Project
 
-For existing projects, its as complicated as adding a git submodule and running an installation script. Let's begin! Firstly, add this git repo as a submodule to the existing project:
+It's as simple as running a script. Let's begin!
+
+**\*Before running!** Please ensure you've read and understood what the script does. Sure, you may learn something from it, but you should never run arbitrary code on your machine without first checking the source. A good habit to get into if you aren't already in it!\*
+
+**\*THIS IS A DESTRUCTIVE OPERATION!** The installation script will delete the `/docker`, `default.env` and `docker-compose.yml` files in the provided local directory (the directory value provided for the `-l` flag). This is as it copies the ones from this project in. You have been warned.
+
+The installation script is the same as a new project installation, however it omits the git repo as it assumes you already have one configured. This under the assumption that its an existing project and you won't want to overwrite your git history.
 
 ```sh
-$ cd ~/git/existing-docker-laravel-project
-$ git submodule add git@github.com:othyn/docker-compose-laravel.git docker
+$ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
+  bash -s -- \
+  -l ~/git/existing-docker-laravel-project
 ```
 
-Excellent! That has now added the repo as a submodule, although be sure to commit the addition. You can now view that submodule it in the project's root directory as with any other directory. Now, let's run that installation script:
-
-```sh
-$ docker/update.sh
-```
-
-As a bonus, if one doesn't already exist, it will go ahead and create a working copy of the `.env` file for you.
+This will install the `/docker` directory into the provided local `-l` directory along with the `docker-compose.yml` file too, along with configuring your existing Laravel project's `.env` and `.env.example`, giving you access to Docker!
 
 That's it! Magic. 🎉
 
 #### Update an Existing Project
 
-To update the submodule in future, use the following command:
-
-```sh
-$ cd ~/git/existing-docker-laravel-project
-$ git submodule update --remote --merge
-$ docker/update.sh
-```
-
-That will download and merge the latest version of the submodule repo, then run the installation script to ensure that the module has all of the update steps run.
+To update in future, just run through the [Existing Project](#existing-project) installation, as the steps will be the same. It will overwrite the files in future with the latest versions in this repo.
 
 That's it! Magic. 🎉
 
 ## Usage
 
-Once the project has been [Setup](#setup), it's very simple to use. Launch docker composer from within the root directory of the project if it is a **new project**. If it is an **existing project**, first `cd` into the `docker` directory, the directory containing the submodule contents. As long as you are in the directory containing the `docker-compose.yml` file in it, away you go!
+Once the project has been [Setup](#setup), it's very simple to use. Launch docker composer from within the root directory of the project. As long as you are in the directory containing the `docker-compose.yml` file in it, away you go!
 
 ```sh
 $ docker-compose up -d
@@ -231,7 +226,7 @@ $ docker-compose run --rm node yarn <scripts>                   # run any packag
 
 ## Configuration
 
-There are elements of this docker project that you can configure for you project if you require extra functionality. Obviously, at the end of the day this is just a bog standard Docker project, so you can go to town with any changes you wish. But these are the main areas that are easy adaptable.
+There are elements of this docker project that you can configure if you require extra functionality. Obviously, at the end of the day this is just a bog standard Docker project, so you can go to town with any changes you wish. But these are the main areas that are easy adaptable.
 
 ### Services
 
@@ -239,32 +234,7 @@ This is the configuration for all of the core services that are configured; `app
 
 ### .env
 
-There is a `.env` file that is currently optional for the project to run on [New Projects](#new-project), but essential to run on [Existing Projects](#existing-project) (see installation steps).
-
-By default, for new installations, the `.env` file won't exist, as at the moment all variables contained within it aren't required for new installations and it saves unnecessary setup steps. Although can be used if you do a quick:
-
-```sh
-$ cd ~/git/existing-docker-laravel-project/docker
-$ cp .env.example .env
-```
-
-Although, this is already done during the setup of an [Existing Project](#existing-project) and again, is not required unless you need to change one of the following values:
-
-`APP_PATH`
-
-```env
-### ### ### ### ### ### ### ### ###
-# Point to the path of your Laravel
-# application code on the host.
-#
-#        New app: <blank>
-#   Existing app: ../
-#
-APP_PATH=../
-### ### ### ### ### ### ### ### ###
-```
-
-As the `.env` file won't exist for new installations, it defaults in the `docker-compose.yml` to use the `./src` directory. So, due to this behaviour, it makes sense to save a step for setup on existing projects to default the `.env` file to have the `APP_PATH` defined as the required parent directory as it will only exist on [Existing Project](#existing-project) installations. Saving you a step!
+The docker compose file runs using the `.env` config for the project, to ensure all hosts, ports, etc. align between Laravel and the containers that it uses. Meaning, if you edit your `.env` and cycle your Docker environment, down and up again, they should automatically re-align.
 
 #### app
 
@@ -276,7 +246,7 @@ The `php.ini` file is any PHP ini configuration you wish to set, this merges int
 
 #### database
 
-The `persist` directory is volume mapped to the MySQL directory on the docker container, so that the containers DB is persisted across container instances.
+The MySQL container is volume mapped within Docker, so that the containers database is persisted across container instances. If you don't want the data to persist, when you bring the container down, use the `-v` flag to also remove attached volumes `$ docker-compose down -v`.
 
 The `base.sql` patch file is run by the MySQL Docker container when its upped, so place any SQL statements in there that you wish to be run. E.g. creating databases.
 
@@ -300,25 +270,55 @@ This will just have things of reference for the project and a brief explanation 
 
 ### Ports
 
-Here are the exposed port maps for the containers:
+Ports are now read out from your `.env` file and will mirror the values defined there. Initially, they will default inline with the contents of `default.env`, until you change them. Below is the relevant excerpt from `default.env` for reference:
 
-| Service   | Host Port | Container Port |
-| --------- | --------- | -------------- |
-| webserver | 8080      | 80             |
-| database  | 3306      | 3306           |
-| app       | 9000      | 9000           |
+```sh
+# |-----------|
+# | Webserver |
+# |-----------|
+
+# 'Docker network' access:
+# - Other containers will access via this as it will be on the virtual network.
+WEBSERVER_PORT=80
+
+# Localhost/external access:
+# - Development machines and any device coming in outside of the virtual network.
+WEBSERVER_EXT_PORT=8080
+```
 
 ### Database Access
 
-This Here are the required database credentials for your `.env` file:
+Database configuration is now read out from your `.env` file and will mirror the values defined there. Initially, they will default inline with the contents of `default.env`, until you change them. Below is the relevant excerpt from `default.env` for reference:
 
-| `.env` Key  | Value     |
-| ----------- | --------- |
-| DB_HOST     | database  |
-| DB_PORT     | 3306      |
-| DB_DATABASE | homestead |
-| DB_USERNAME | homestead |
-| DB_PASSWORD | secret    |
+```sh
+# |----------|
+# | Database |
+# |----------|
+
+# Enforce the connection type so that the MySQL container will
+# be used. This is default in Laravel, but worth enforcing.
+DB_CONNECTION=mysql
+
+# The host is crucial as it is used to identify the container
+# on the local network, Docker exposes this by hostname.
+# Doing this ensures the container name and addressable location
+# can be kept in sync.
+DB_HOST=database
+
+# 'Docker network' access:
+# - Other containers will access via this as it will be on the virtual network.
+DB_PORT=3306
+
+# Localhost/external access:
+# - Development machines and any device coming in outside of the virtual network.
+DB_EXT_PORT=3306
+
+# As for the database information, lets keep it the same as Homestead
+# to keep things recognisable and easier to work with.
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+```
 
 ## Recommended Packages
 
@@ -347,7 +347,7 @@ Of course, if you want to take your self to the next level, learn anything new o
 - [laravel-airlock](https://github.com/laravel/airlock) or [laravel-passport](https://github.com/laravel/passport)
   - Both authentication layers for your application, for SPA's or just ways to easily integrate OAuth. Either way, well documented first-party plugins that are staple for these use cases.
 - [laravel-deployer](https://github.com/lorisleiva/laravel-deployer)
-  - A wrapper around [deployer.org](https://github.com/deployphp/deployer) for Laravel, it allows easy access and customisation through Laravel's tool chain. It maps the relevant commands to artisan and places the deployer config within Laravel's for tidiness and scoping. Very handy for semi-autonomous and non-CI/CD deployments! **Although**, this does not play well with the default structure of this repo, it won't deploy subdirectories... so you have to restructure the app to place the app solely within the root directory for this to work.
+  - A wrapper around [deployer.org](https://github.com/deployphp/deployer) for Laravel, it allows easy access and customisation through Laravel's tool chain. It maps the relevant commands to artisan and places the deployer config within Laravel's for tidiness and scoping. Very handy for semi-autonomous and non-CI/CD deployments!
 
 ## Changelog
 

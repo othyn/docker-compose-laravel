@@ -94,7 +94,7 @@ USE_FORCE=0
 # Capture provided command args.
 # https://stackoverflow.com/a/24868071/4494375
 ##
-while getopts ":r:l:pfh" OPT
+while getopts ":r:l:pfbch" OPT
 do
     case $OPT in
         r)

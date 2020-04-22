@@ -363,40 +363,40 @@ export $(egrep -v '^#' ${REPO_LOCAL}/default.env | xargs)
 # Configure the Laravel project.
 ##
 log "Configure the Laravel project"
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=${DB_HOST}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=${DB_HOST}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=${DB_PORT}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=${DB_PORT}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=${DB_DATABASE}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=${DB_DATABASE}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=${DB_USERNAME}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=${DB_USERNAME}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=${DB_PASSWORD}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=${DB_PASSWORD}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

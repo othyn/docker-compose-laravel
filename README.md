@@ -232,7 +232,7 @@ There are elements of this docker project that you can configure if you require 
 
 This is the configuration for all of the core services that are configured; `app`, `composer`, `database`, `node` and `webserver`. All the services configuration is, as usual, located in their declaration within the `docker-compose.yml` in the project root, and if necessary, accompanied also by a directory with the service name in the `docker` directory, within the root directory.
 
-### .env
+#### .env
 
 The docker compose file runs using the `.env` config for the project, to ensure all hosts, ports, etc. align between Laravel and the containers that it uses. Meaning, if you edit your `.env` and cycle your Docker environment, down and up again, they should automatically re-align.
 

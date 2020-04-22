@@ -243,13 +243,7 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     if ! RESULT=$(rm -rf "./.git" 2>&1) ; then
         logError "${RESULT}" $?
     fi
-    if ! RESULT=$(rm "./.env.example" 2>&1) ; then
-        logError "${RESULT}" $?
-    fi
     if ! RESULT=$(rm "./install.sh" 2>&1) ; then
-        logError "${RESULT}" $?
-    fi
-    if ! RESULT=$(rm "./update.sh" 2>&1) ; then
         logError "${RESULT}" $?
     fi
     if ! RESULT=$(rm "./LICENSE" 2>&1) ; then

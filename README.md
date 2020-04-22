@@ -41,7 +41,7 @@ Ensure that [Docker is installed](https://docs.docker.com/docker-for-mac/install
 
 ### New Project
 
-Create a new repo on GitHub, or your git host of choice. By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`.
+Create a new repo on GitHub, or your git host of choice. By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`. If you also require this branch to be created by the installer as well during installation, specifiy the `-c` flag.
 
 Once created, grab and save the SSH link to the new remote for later. You can use HTTPS too, provide the link to it as you would with SSH, but then instruct the script that you are using HTTPS by passing the `-p` flag.
 

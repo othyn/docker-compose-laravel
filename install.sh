@@ -32,7 +32,7 @@ log() {
         PRINT_STRING="${1}: ${PRINT_NUMBER}..."
     fi
 
-    printf "> %-50s" "${PRINT_STRING}"
+    printf "> %-40s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }
@@ -71,7 +71,6 @@ cat << EOF
                 E.g. git@github.com:othyn/new-docker-laravel-project.git
     -p      Use HTTPS clone method instead of SSH.
     -f      Force the local directory, if it exists, it will be removed.
-    -b      Git branch to checkout on installation, defaults to origin/master.
     -h      Brings up this help screen.
 
 EOF
@@ -86,13 +85,12 @@ NEW_PROJECT=0
 REPO_REMOTE=""
 REPO_LOCAL=""
 USE_FORCE=0
-PROJECT_GIT_BRANCH="origin/master"
 
 ##
 # Capture provided command args.
 # https://stackoverflow.com/a/24868071/4494375
 ##
-while getopts ":r:l:b:pfh" OPT
+while getopts ":r:l:pfh" OPT
 do
     case $OPT in
         r)
@@ -101,9 +99,6 @@ do
             ;;
         l)
             REPO_LOCAL="${OPTARG}"
-            ;;
-        b)
-            PROJECT_GIT_BRANCH="${OPTARG}"
             ;;
         p)
             REPO_DOCKER="https://github.com/othyn/docker-compose-laravel.git"
@@ -298,24 +293,6 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     fi
     logDone
 else
-    ##
-    # Fetch remote repos.
-    ##
-    log "Fetching remote branches"
-    if ! RESULT=$(git fetch 2>&1) ; then
-        logError "${RESULT}" $?
-    fi
-    logDone
-
-    ##
-    # Checkout and track the required branch.
-    ##
-    log "Checking out and tracking branch '${PROJECT_GIT_BRANCH}'"
-    if ! RESULT=$(git checkout --track ${PROJECT_GIT_BRANCH} --force 2>&1) ; then
-        logError "${RESULT}" $?
-    fi
-    logDone
-
     ##
     # Commit the base docker project.
     ##

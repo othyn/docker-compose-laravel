@@ -21,6 +21,7 @@ A Docker Compose setup for Laravel projects, inspired by [this repo](https://git
     - [.env](#env)
     - [app](#app)
     - [database](#database)
+      - [Common Issues](#common-issues)
     - [webserver](#webserver)
   - [Building](#building)
 - [Reference](#reference)
@@ -92,9 +93,7 @@ It's as simple as running a script. Let's begin!
 
 **\*THIS IS A DESTRUCTIVE OPERATION!** The installation script will delete the `/docker`, `default.env` and `docker-compose.yml` files in the provided local directory (the directory value provided for the `-l` flag). This is as it copies the ones from this project in. You have been warned.
 
-The installation script is the same as a new project installation, however it omits the git repo as it assumes you already have one configured. This under the assumption that its an existing project and you won't want to overwrite your git history.
-
-By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`.
+The installation script is the same as a new project installation, however it omits the git repo as it assumes you already have one configured. This under the assumption that its an existing project and you won't want to overwrite your git history. Just make sure you have the project on the branch you want the changes to be made on prior to running the script, as it commits a few times throughout the process.
 
 ```sh
 $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
@@ -257,9 +256,9 @@ The MySQL container is volume mapped within Docker, so that the containers datab
 
 The `base.sql` patch file is run by the MySQL Docker container when its upped, so place any SQL statements in there that you wish to be run. E.g. creating databases.
 
-**As per the MySQL docs**, this is only run when the containers volume to `/var/lib/mysql` is empty - same with `env` variables. If you are having issues connecting to the database, down all the containers and remove their volumes and try again.
+##### Common Issues
 
-The `mysql.conf` file is any MySQL configuration you wish to set, this merges into the system default `mysql.conf`, as defined in the [documentation for the docker image](https://hub.docker.com/_/mysql), under 'Using a custom MySQL configuration file'. (Documentation page doesn't support URL fragments, no ID's!)
+**As per the MySQL docs**, this is only run when the containers volume to `/var/lib/mysql` is empty - same with `env` variables. If you are having issues connecting to the database, down all the containers and remove their volumes and try again.
 
 #### webserver
 

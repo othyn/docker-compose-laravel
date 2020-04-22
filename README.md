@@ -77,7 +77,6 @@ The back slashes are just for readability, you can one-line the command if you w
 #                E.g. git@github.com:othyn/new-docker-laravel-project.git
 #    -p      Use HTTPS clone method instead of SSH.
 #    -f      Force the local directory, if it exists, it will be removed.
-#    -b      Git branch to checkout on installation, defaults to origin/master.
 #    -h      Brings up this help screen.
 ```
 

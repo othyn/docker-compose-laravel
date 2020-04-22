@@ -47,7 +47,7 @@ Once created, grab and save the SSH link to the new remote for later. You can us
 
 Below is my example. I've created the remote and its ready to use with a `master` branch that GitHub automagically creates for us available at `origin/master`:
 
-```
+```plaintext
 New remote: git@github.com:othyn/new-docker-laravel-project.git
 ```
 
@@ -60,6 +60,17 @@ $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/ins
   bash -s -- \
   -r git@github.com:othyn/new-docker-laravel-project.git \
   -l ~/git/new-docker-laravel-project
+```
+
+or another example against a fresh AWS CodeCommit repo, where CodeCommit does not automatically create you and branches:
+
+```sh
+curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
+  bash -s -- \
+  -r ssh://git-codecommit.eu-west-1.amazonaws.com/v1/repos/new-docker-laravel-project \
+  -l ~/git/new-docker-laravel-project \
+  -b master \
+  -c
 ```
 
 The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag, just for reference:

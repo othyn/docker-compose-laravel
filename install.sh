@@ -398,10 +398,10 @@ fi
 if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=${DB_PASSWORD}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env" 2>&1) ; then
+if ! RESULT=$(echo -e "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
+if ! RESULT=$(echo -e "\n# Docker webserver config\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

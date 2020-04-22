@@ -32,7 +32,7 @@ log() {
         PRINT_STRING="${1}: ${PRINT_NUMBER}..."
     fi
 
-    printf "> %-40s" "${PRINT_STRING}"
+    printf "> %-45s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }
@@ -375,11 +375,35 @@ fi
 if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=${DB_PASSWORD}/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo -e "\n# Docker config\nDB_EXT_PORT=${DB_EXT_PORT}\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env" 2>&1) ; then
-    logError "${RESULT}" $?
+if ! grep -q "# Docker config" "${REPO_LOCAL}/.env"; then
+    if ! RESULT=$(echo -e "\n# Docker config\nDB_EXT_PORT=${DB_EXT_PORT}\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+else
+    if ! RESULT=$(sed -i "" -e "/nDB_EXT_PORT/s/.*/nDB_EXT_PORT=${nDB_EXT_PORT}/" "${REPO_LOCAL}/.env" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(sed -i "" -e "/nWEBSERVER_PORT/s/.*/nWEBSERVER_PORT=${nWEBSERVER_PORT}/" "${REPO_LOCAL}/.env" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(sed -i "" -e "/nWEBSERVER_EXT_PORT/s/.*/nWEBSERVER_EXT_PORT=${nWEBSERVER_EXT_PORT}/" "${REPO_LOCAL}/.env" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
 fi
-if ! RESULT=$(echo -e "\n# Docker config\nDB_EXT_PORT=${DB_EXT_PORT}\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
-    logError "${RESULT}" $?
+if ! grep -q "# Docker config" "${REPO_LOCAL}/.env.example"; then
+    if ! RESULT=$(echo -e "\n# Docker config\nDB_EXT_PORT=${DB_EXT_PORT}\nWEBSERVER_PORT=${WEBSERVER_PORT}\nWEBSERVER_EXT_PORT=${WEBSERVER_EXT_PORT}" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+else
+    if ! RESULT=$(sed -i "" -e "/nDB_EXT_PORT/s/.*/nDB_EXT_PORT=${nDB_EXT_PORT}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(sed -i "" -e "/nWEBSERVER_PORT/s/.*/nWEBSERVER_PORT=${nWEBSERVER_PORT}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(sed -i "" -e "/nWEBSERVER_EXT_PORT/s/.*/nWEBSERVER_EXT_PORT=${nWEBSERVER_EXT_PORT}/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
 fi
 logDone
 

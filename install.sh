@@ -94,7 +94,7 @@ USE_FORCE=0
 # Capture provided command args.
 # https://stackoverflow.com/a/24868071/4494375
 ##
-while getopts ":r:l:pfbch" OPT
+while getopts ":r:l:b:pfch" OPT
 do
     case $OPT in
         r)
@@ -104,14 +104,14 @@ do
         l)
             REPO_LOCAL="${OPTARG}"
             ;;
+        b)
+            NEW_PROJECT_GIT_BRANCH="${OPTARG}"
+            ;;
         p)
             REPO_DOCKER="https://github.com/othyn/docker-compose-laravel.git"
             ;;
         f)
             USE_FORCE=1
-            ;;
-        b)
-            NEW_PROJECT_GIT_BRANCH="${OPTARG}"
             ;;
         c)
             NEW_PROJECT_GIT_CREATE_BRANCH=1

@@ -300,7 +300,7 @@ else
     if ! RESULT=$(git add . 2>&1) ; then
         logError "${RESULT}" $?
     fi
-    if ! RESULT=$(git commit -m "[AUTO] Implement base docker project from ${REPO_DOCKER}." 2>&1) ; then
+    if ! RESULT=$(git commit -m "[AUTO] Updated base docker project to latest version from ${REPO_DOCKER}." 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone

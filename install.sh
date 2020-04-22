@@ -71,8 +71,7 @@ cat << EOF
                 E.g. git@github.com:othyn/new-docker-laravel-project.git
     -p      Use HTTPS clone method instead of SSH.
     -f      Force the local directory, if it exists, it will be removed.
-    -b      Git branch to checkout on a new installation, defaults to  origin/master.
-    -c      Create the branch provided by -b before checking it out on a new installation.
+    -b      Git branch to checkout on installation, defaults to origin/master.
     -h      Brings up this help screen.
 
 EOF
@@ -84,17 +83,16 @@ exit 0
 ##
 REPO_DOCKER="git@github.com:othyn/docker-compose-laravel.git"
 NEW_PROJECT=0
-NEW_PROJECT_GIT_BRANCH="origin/master"
-NEW_PROJECT_GIT_CREATE_BRANCH=0
 REPO_REMOTE=""
 REPO_LOCAL=""
 USE_FORCE=0
+PROJECT_GIT_BRANCH="origin/master"
 
 ##
 # Capture provided command args.
 # https://stackoverflow.com/a/24868071/4494375
 ##
-while getopts ":r:l:b:pfch" OPT
+while getopts ":r:l:b:pfh" OPT
 do
     case $OPT in
         r)
@@ -105,16 +103,13 @@ do
             REPO_LOCAL="${OPTARG}"
             ;;
         b)
-            NEW_PROJECT_GIT_BRANCH="${OPTARG}"
+            PROJECT_GIT_BRANCH="${OPTARG}"
             ;;
         p)
             REPO_DOCKER="https://github.com/othyn/docker-compose-laravel.git"
             ;;
         f)
             USE_FORCE=1
-            ;;
-        c)
-            NEW_PROJECT_GIT_CREATE_BRANCH=1
             ;;
         h)
             logDone
@@ -283,6 +278,18 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     logDone
 
     ##
+    # Create a new master branch.
+    ##
+    log "Creating new master branch with initial commit"
+    if ! RESULT=$(git add . 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(git commit -m "[AUTO] Implement base docker project from ${REPO_DOCKER}." 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
+else
+    ##
     # Fetch remote repos.
     ##
     log "Fetching remote branches"
@@ -292,37 +299,26 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     logDone
 
     ##
-    # Create a new branch if required.
-    ##
-    if [[ "${NEW_PROJECT_GIT_CREATE_BRANCH}" == "1" ]] ; then
-        log "Creating new branch '${NEW_PROJECT_GIT_BRANCH}'"
-        if ! RESULT=$(git branch ${NEW_PROJECT_GIT_BRANCH} 2>&1) ; then
-            logError "${RESULT}" $?
-        fi
-        logDone
-    fi
-
-    ##
     # Checkout and track the required branch.
     ##
-    log "Checking out and tracking branch '${NEW_PROJECT_GIT_BRANCH}'"
-    if ! RESULT=$(git checkout --track ${NEW_PROJECT_GIT_BRANCH} --force 2>&1) ; then
+    log "Checking out and tracking branch '${PROJECT_GIT_BRANCH}'"
+    if ! RESULT=$(git checkout --track ${PROJECT_GIT_BRANCH} --force 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
+
+    ##
+    # Commit the base docker project.
+    ##
+    log "Committing base docker project"
+    if ! RESULT=$(git add . 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    if ! RESULT=$(git commit -m "[AUTO] Implement base docker project from ${REPO_DOCKER}." 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone
 fi
-
-##
-# Commit the base docker project.
-##
-log "Committing base docker project"
-if ! RESULT=$(git add . 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-if ! RESULT=$(git commit -m "[AUTO] Implement base docker project from ${REPO_DOCKER}." 2>&1) ; then
-    logError "${RESULT}" $?
-fi
-logDone
 
 ##
 # Laravel installation steps only required on a new installation.

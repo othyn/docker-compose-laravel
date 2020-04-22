@@ -41,11 +41,11 @@ Ensure that [Docker is installed](https://docs.docker.com/docker-for-mac/install
 
 ### New Project
 
-Create a new repo on GitHub, or your git host of choice. By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`. If you also require this branch to be created by the installer as well during installation, specifiy the `-c` flag.
+Create a new **empty** repo on GitHub, or your git host of choice. The git repo will be initialised and a master branch created and pushed during setup.
 
 Once created, grab and save the SSH link to the new remote for later. You can use HTTPS too, provide the link to it as you would with SSH, but then instruct the script that you are using HTTPS by passing the `-p` flag.
 
-Below is my example. I've created the remote and its ready to use with a `master` branch that GitHub automagically creates for us available at `origin/master`:
+Below is my example. I've created the remote and its ready to use:
 
 ```plaintext
 New remote: git@github.com:othyn/new-docker-laravel-project.git
@@ -62,17 +62,6 @@ $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/ins
   -l ~/git/new-docker-laravel-project
 ```
 
-or another example against a fresh AWS CodeCommit repo, where CodeCommit does not automatically create you and branches:
-
-```sh
-curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \
-  bash -s -- \
-  -r ssh://git-codecommit.eu-west-1.amazonaws.com/v1/repos/new-docker-laravel-project \
-  -l ~/git/new-docker-laravel-project \
-  -b master \
-  -c
-```
-
 The back slashes are just for readability, you can one-line the command if you wish. Below is an excerpt of the [`install.sh`](install.sh) help contents, displayed by passing the `-h` flag, just for reference:
 
 ```sh
@@ -87,8 +76,7 @@ The back slashes are just for readability, you can one-line the command if you w
 #                E.g. git@github.com:othyn/new-docker-laravel-project.git
 #    -p      Use HTTPS clone method instead of SSH.
 #    -f      Force the local directory, if it exists, it will be removed.
-#    -b      Git branch to checkout on a new installation, defaults to  origin/master.
-#    -c      Create the branch provided by -b before checking it out on a new installation.
+#    -b      Git branch to checkout on installation, defaults to origin/master.
 #    -h      Brings up this help screen.
 ```
 
@@ -105,6 +93,8 @@ It's as simple as running a script. Let's begin!
 **\*THIS IS A DESTRUCTIVE OPERATION!** The installation script will delete the `/docker`, `default.env` and `docker-compose.yml` files in the provided local directory (the directory value provided for the `-l` flag). This is as it copies the ones from this project in. You have been warned.
 
 The installation script is the same as a new project installation, however it omits the git repo as it assumes you already have one configured. This under the assumption that its an existing project and you won't want to overwrite your git history.
+
+By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`.
 
 ```sh
 $ curl https://raw.githubusercontent.com/othyn/docker-compose-laravel/master/install.sh | \

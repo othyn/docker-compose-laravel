@@ -328,7 +328,7 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     # Create a new Laravel project.
     ##
     log "Creating a new Laravel project"
-    if ! RESULT=$(laravel new ${REPO_LOCAL} --force --quiet 2>&1) ; then
+    if ! RESULT=$(laravel new ./ --force --quiet 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone

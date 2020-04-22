@@ -32,7 +32,7 @@ log() {
         PRINT_STRING="${1}: ${PRINT_NUMBER}..."
     fi
 
-    printf "> %-38s" "${PRINT_STRING}"
+    printf "> %-50s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }
@@ -71,6 +71,8 @@ cat << EOF
                 E.g. git@github.com:othyn/new-docker-laravel-project.git
     -p      Use HTTPS clone method instead of SSH.
     -f      Force the local directory, if it exists, it will be removed.
+    -b      Git branch to checkout on a new installation, defaults to  origin/master.
+    -c      Create the branch provided by -b before checking it out on a new installation.
     -h      Brings up this help screen.
 
 EOF
@@ -82,6 +84,8 @@ exit 0
 ##
 REPO_DOCKER="git@github.com:othyn/docker-compose-laravel.git"
 NEW_PROJECT=0
+NEW_PROJECT_GIT_BRANCH="origin/master"
+NEW_PROJECT_GIT_CREATE_BRANCH=0
 REPO_REMOTE=""
 REPO_LOCAL=""
 USE_FORCE=0
@@ -105,6 +109,12 @@ do
             ;;
         f)
             USE_FORCE=1
+            ;;
+        b)
+            NEW_PROJECT_GIT_BRANCH="${OPTARG}"
+            ;;
+        c)
+            NEW_PROJECT_GIT_CREATE_BRANCH=1
             ;;
         h)
             logDone
@@ -282,10 +292,21 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     logDone
 
     ##
-    # Checkout and track remote repo.
+    # Create a new branch if required.
     ##
-    log "Checking out and tracking remote"
-    if ! RESULT=$(git checkout --track origin/master --force 2>&1) ; then
+    if [[ "${NEW_PROJECT_GIT_CREATE_BRANCH}" == "1" ]] ; then
+        log "Creating new branch '${NEW_PROJECT_GIT_BRANCH}'"
+        if ! RESULT=$(git branch ${NEW_PROJECT_GIT_BRANCH} 2>&1) ; then
+            logError "${RESULT}" $?
+        fi
+        logDone
+    fi
+
+    ##
+    # Checkout and track the required branch.
+    ##
+    log "Checking out and tracking branch '${NEW_PROJECT_GIT_BRANCH}'"
+    if ! RESULT=$(git checkout --track ${NEW_PROJECT_GIT_BRANCH} --force 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone

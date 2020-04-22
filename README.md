@@ -41,7 +41,11 @@ Ensure that [Docker is installed](https://docs.docker.com/docker-for-mac/install
 
 ### New Project
 
-Create a new repo on GitHub, or your git host of choice. Once created, grab and save the remote for later. This will be my example, created the remote and ready to use.
+Create a new repo on GitHub, or your git host of choice. By default, the installer will expect a `master` branch available against the `origin`, explicitly checking out `origin/master` during the installation. Although, you can override this with the `-b` flag, e.g. `-b my-branch`.
+
+Once created, grab and save the SSH link to the new remote for later. You can use HTTPS too, provide the link to it as you would with SSH, but then instruct the script that you are using HTTPS by passing the `-p` flag.
+
+Below is my example. I've created the remote and its ready to use with a `master` branch that GitHub automagically creates for us available at `origin/master`:
 
 ```
 New remote: git@github.com:othyn/new-docker-laravel-project.git
@@ -72,6 +76,8 @@ The back slashes are just for readability, you can one-line the command if you w
 #                E.g. git@github.com:othyn/new-docker-laravel-project.git
 #    -p      Use HTTPS clone method instead of SSH.
 #    -f      Force the local directory, if it exists, it will be removed.
+#    -b      Git branch to checkout on a new installation, defaults to  origin/master.
+#    -c      Create the branch provided by -b before checking it out on a new installation.
 #    -h      Brings up this help screen.
 ```
 

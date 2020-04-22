@@ -288,6 +288,15 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
         logError "${RESULT}" $?
     fi
     logDone
+
+    ##
+    # Push the new master to remote setting the new origin so we have something to work with from now on.
+    ##
+    log "Pushing new remote"
+    if ! RESULT=$(git push --set-upstream origin master 2>&1) ; then
+        logError "${RESULT}" $?
+    fi
+    logDone
 else
     ##
     # Fetch remote repos.

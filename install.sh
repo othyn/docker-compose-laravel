@@ -32,7 +32,7 @@ log() {
         PRINT_STRING="${1}: ${PRINT_NUMBER}..."
     fi
 
-    printf "> %-36s" "${PRINT_STRING}"
+    printf "> %-38s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }
@@ -240,16 +240,16 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     # Clean the project of git and a few unnecessary files.
     ##
     log "Cleaning project"
-    if ! RESULT=$(rm -rf "./.git" 2>&1) ; then
+    if ! RESULT=$(rm -rf "${REPO_LOCAL}/.git" 2>&1) ; then
         logError "${RESULT}" $?
     fi
-    if ! RESULT=$(rm "./install.sh" 2>&1) ; then
+    if ! RESULT=$(rm "${REPO_LOCAL}/install.sh" 2>&1) ; then
         logError "${RESULT}" $?
     fi
-    if ! RESULT=$(rm "./LICENSE" 2>&1) ; then
+    if ! RESULT=$(rm "${REPO_LOCAL}/LICENSE" 2>&1) ; then
         logError "${RESULT}" $?
     fi
-    if ! RESULT=$(rm "./README.md" 2>&1) ; then
+    if ! RESULT=$(rm "${REPO_LOCAL}/README.md" 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone
@@ -311,7 +311,7 @@ if [[ "${NEW_PROJECT}" == "1" ]] ; then
     # Create a new Laravel project.
     ##
     log "Creating a new Laravel project"
-    if ! RESULT=$(laravel new ./ --force --quiet 2>&1) ; then
+    if ! RESULT=$(laravel new ${REPO_LOCAL} --force --quiet 2>&1) ; then
         logError "${RESULT}" $?
     fi
     logDone
@@ -336,46 +336,46 @@ fi
 #
 # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 ##
-export $(egrep -v '^#' ./default.env | xargs)
+export $(egrep -v '^#' ${REPO_LOCAL}/default.env | xargs)
 
 ##
 # Configure the Laravel project.
 ##
 log "Configure the Laravel project"
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "src/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "src/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_HOST/s/.*/DB_HOST=$DB_HOST/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "src/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "src/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PORT/s/.*/DB_PORT=$DB_PORT/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "src/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "src/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_DATABASE/s/.*/DB_DATABASE=$DB_DATABASE/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "src/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "src/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_USERNAME/s/.*/DB_USERNAME=$DB_USERNAME/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "src/.env.example" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "src/.env" 2>&1) ; then
+if ! RESULT=$(sed -i "" -e "/DB_PASSWORD/s/.*/DB_PASSWORD=$DB_PASSWORD/" "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "src/.env" 2>&1) ; then
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "${REPO_LOCAL}/.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
-if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "src/.env.example" 2>&1) ; then
+if ! RESULT=$(echo "\n# Docker webserver config\nWEBSERVER_PORT=$WEBSERVER_PORT\nWEBSERVER_EXT_PORT=$WEBSERVER_EXT_PORT" >> "${REPO_LOCAL}/.env.example" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone
@@ -384,7 +384,7 @@ logDone
 # Clean up the temporary default.env file.
 ##
 log "Clean up the temporary default.env file"
-if ! RESULT=$(rm "./default.env" 2>&1) ; then
+if ! RESULT=$(rm "${REPO_LOCAL}/default.env" 2>&1) ; then
     logError "${RESULT}" $?
 fi
 logDone

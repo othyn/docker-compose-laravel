@@ -4,7 +4,7 @@ networks:
   laravel:
 
 volumes:
-  mysql-database:
+  database:
 
 services:
   database:
@@ -12,9 +12,8 @@ services:
     container_name: ${DB_HOST}
     restart: "no"
     volumes:
-      - ./docker/database/mysql.cnf:/etc/mysql/my.cnf
       - ./docker/database/base.sql:/base.sql
-      - mysql-database:/var/lib/mysql
+      - database:/var/lib/mysql
     networks:
       - laravel
     ports:
@@ -25,8 +24,6 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     command: --init-file /base.sql
-    logging:
-      driver: none
 
   composer:
     image: composer:latest

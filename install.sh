@@ -32,7 +32,7 @@ log() {
         PRINT_STRING="${1}: ${PRINT_NUMBER}..."
     fi
 
-    printf "> %-45s" "${PRINT_STRING}"
+    printf "> %-50s" "${PRINT_STRING}"
     #           ^^-- Needs to be set to the length of the longest log message, it's
     #                purely aesthetic, but it aligns all the log termination messages.
 }

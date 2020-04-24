@@ -23,7 +23,7 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-    command: --init-file /base.sql
+    command: --init-file /base.sql --default-authentication-plugin=mysql_native_password
 
   composer:
     image: composer:latest

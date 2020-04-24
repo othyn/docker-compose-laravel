@@ -348,8 +348,6 @@ Of course, if you want to take your self to the next level, learn anything new o
   - Again, not Laravel, technically. For those that don't know, Laravel is built on top of the Symfony framework, sharing a lot of its core. It's components are excellent and well documented, would highly recommend seeing if they have a utility class before you create one, they usually do! Saves re-inventing the wheel and keeps things maintainable.
 - [laravel-cross-database-subqueries](https://github.com/hoyvoy/laravel-cross-database-subqueries)
   - A mouth full, but does what it says. Laravel has a bug, I think its a bug, where it ignores the models connection definition when using subqueries when its perfectly capable of doing so and I think, is what is expected behavior.
-- [laravel-cors](https://github.com/fruitcake/laravel-cors) or [laravel-cors](https://github.com/spatie/laravel-cors)
-  - Both have similar implementations, but handle the same thing. Easy management of CORS within your Laravel app, personally I think Laravel should have better handling of this built in.
 - [laravel-compass](https://github.com/davidhsianturi/laravel-compass)
   - A superb sub-application that allows for an API consumption client right in as part of your application. This is a fantastic tool that I always install alongside API apps.
 - [laravel-airlock](https://github.com/laravel/airlock) or [laravel-passport](https://github.com/laravel/passport)

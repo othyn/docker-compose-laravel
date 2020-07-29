@@ -254,7 +254,7 @@ The `php.ini` file is any PHP ini configuration you wish to set, this merges int
 
 The MySQL container is volume mapped within Docker, so that the containers database is persisted across container instances. If you don't want the data to persist, when you bring the container down, use the `-v` flag to also remove attached volumes `$ docker-compose down -v`.
 
-The `base.sql` patch file is run by the MySQL Docker container when its upped, so place any SQL statements in there that you wish to be run. E.g. creating databases.
+The `base.sql` patch file is run by the MySQL Docker container when its upped, so place any SQL statements in there that you wish to be run. E.g. creating databases. You can also create as many SQL patch or dump files in the `docker/database/init/` directory and they will be run on startup, this can also be a good way to manage unwieldy amounts of data.
 
 ##### Common Issues
 

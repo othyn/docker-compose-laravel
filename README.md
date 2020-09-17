@@ -576,6 +576,8 @@ class CreateMyTable extends Migration
 
 ... and thats it! As long as the values in your `.env` correctly reflect your environment, all should *just work*.
 
+Great thing is too, is that if you need to add more servers you can just repeat the above steps again, but for `TERTIARY_DB_CONNECTION`, etc, and beyond.
+
 ## Recommended Packages
 
 Here are a few packages that I highly recommend to take your Laravel project to the next level.

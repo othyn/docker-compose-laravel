@@ -341,7 +341,7 @@ Of course, if you want to take your self to the next level, learn anything new o
 - [laravel-enum](https://github.com/BenSampo/laravel-enum)
   - A brilliant plugin that does exactly what it says, adds 'enums' to Laravel. Very handy!
 - [scribe](https://github.com/knuckleswtf/scribe)
-  - Brilliant automated API docs generator, with brilliant Postman integration. Unfortunately, the original repo [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) appears to [no longer be maintained](https://github.com/mpociot/laravel-apidoc-generator/issues/780), with one of the lead maintainers forking it to create Scribe!
+  - Brilliant automated API docs generator, with Postman integration. Unfortunately, the original repo [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) appears to [no longer be maintained](https://github.com/mpociot/laravel-apidoc-generator/issues/777), with one of the lead maintainers forking it to create Scribe! There is also a [migration guide](https://scribe.readthedocs.io/en/latest/migrating.html) for this as part of the Scribe project.
 - [laravel-package](https://github.com/Jhnbrn90/LaravelPackage.com)
   - Okay, so not a package per-say, but it is an incredible resource on creating them.
 - [phpunit-pretty-print](https://github.com/sempro/phpunit-pretty-print)

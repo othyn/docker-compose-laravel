@@ -344,8 +344,6 @@ Of course, if you want to take your self to the next level, learn anything new o
   - Brilliant automated API docs generator, with Postman integration. Unfortunately, the original repo [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) appears to [no longer be maintained](https://github.com/mpociot/laravel-apidoc-generator/issues/777), with one of the lead maintainers forking it to create Scribe! There is also a [migration guide](https://scribe.readthedocs.io/en/latest/migrating.html) for this as part of the Scribe project.
 - [laravel-package](https://github.com/Jhnbrn90/LaravelPackage.com)
   - Okay, so not a package per-say, but it is an incredible resource on creating them.
-- [phpunit-pretty-print](https://github.com/sempro/phpunit-pretty-print)
-  - Not Laravel, but a PHPUnit beautifier. Makes it much easier to work with the output.
 - [symfony](https://symfony.com/)
   - Again, not Laravel, technically. For those that don't know, Laravel is built on top of the Symfony framework, sharing a lot of its core. It's components are excellent and well documented, would highly recommend seeing if they have a utility class before you create one, they usually do! Saves re-inventing the wheel and keeps things maintainable.
 - [laravel-cross-database-subqueries](https://github.com/hoyvoy/laravel-cross-database-subqueries)

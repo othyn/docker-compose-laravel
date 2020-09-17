@@ -27,6 +27,7 @@ An opinionated Docker Compose setup for Laravel projects, inspired by [this repo
 - [Reference](#reference)
   - [Ports](#ports)
   - [Database Access](#database-access)
+  - [Adding a second database server](#adding-a-second-database-server)
 - [Recommended Packages](#recommended-packages)
 - [Changelog](#changelog)
 - [Versioning](#versioning)
@@ -327,6 +328,253 @@ DB_DATABASE=homestead
 DB_USERNAME=homestead
 DB_PASSWORD=secret
 ```
+
+### Adding a second database server
+
+Say your production environment is split and your application needs to access two separate database servers, maybe one is for logging or owned by another service, I have found the optimal way to do this is to empower the `.env` with more control over the database connection name. This requires the following changes:
+
+#### docker-compose.yml
+
+First we need to define the container and volume for our secondary database to use. The `database` service and volume will already exist for you to use, its just there as reference, we are focused on the `secondary_database` service and volume for this part:
+
+```yaml
+# ...
+
+volumes:
+  database:
+  secondary_database:
+
+services:
+  database:
+    image: mysql:latest
+    container_name: ${DB_HOST}
+    restart: "no"
+    volumes:
+      - ./docker/database/init:/docker-entrypoint-initdb.d
+      - database:/var/lib/mysql
+    networks:
+      - laravel
+    ports:
+      - ${DB_EXT_PORT}:${DB_PORT}
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    command: --default-authentication-plugin=mysql_native_password
+
+  secondary_database:
+    image: mysql:latest
+    container_name: ${SECONDARY_DB_HOST}
+    restart: "no"
+    volumes:
+      - ./docker/secondary_database/init:/docker-entrypoint-initdb.d
+      - secondary_database:/var/lib/mysql
+    networks:
+      - laravel
+    ports:
+      - ${SECONDARY_DB_EXT_PORT}:${SECONDARY_DB_PORT}
+    environment:
+      MYSQL_DATABASE: ${SECONDARY_DB_DATABASE}
+      MYSQL_USER: ${SECONDARY_DB_USERNAME}
+      MYSQL_PASSWORD: ${SECONDARY_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${SECONDARY_DB_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    command: --default-authentication-plugin=mysql_native_password
+
+# ...
+```
+
+Then we need to create the directory that Docker will search for when creating the container, to load in any potential `*.sql` files that may exist and apply them to the container. From the root of the project, run the following command:
+
+```sh
+mkdir -p docker/secondary_database/init & touch docker/secondary_database/init/base.sql
+```
+
+You can then edit `docker/secondary_database/init/base.sql` with any database initialisation or migrations that you wish to perform, or even add more `*.sql` files into the mix.
+
+#### .env & .env.example (& .env.testing if you are using it!)
+
+For the env configuration, its mainly adding a new `DB_DRIVER` value and changing the behaviour of the `DB_CONNECTION` slightly.
+
+```env
+# ...
+
+# Primary (App) DB
+DB_CONNECTION=my_app_database
+DB_DRIVER=mysql
+DB_HOST=database # Make sure this matches the service name in your docker-compose.yml
+DB_PORT=3306
+DB_EXT_PORT=33069 # Docker config
+DB_DATABASE=my_app_database
+DB_USERNAME=my_app_database
+DB_PASSWORD=secret
+
+# Secondary DB
+SECONDARY_DB_CONNECTION=my_secondary_database
+SECONDARY_DB_DRIVER=mysql
+SECONDARY_DB_HOST=secondary_database # Make sure this matches the service name in your docker-compose.yml
+SECONDARY_DB_PORT=3306
+SECONDARY_DB_EXT_PORT=33070 # Docker config
+SECONDARY_DB_DATABASE=my_secondary_database
+SECONDARY_DB_USERNAME=my_secondary_database
+SECONDARY_DB_PASSWORD=secret
+
+# ...
+```
+
+#### config/database.php
+
+In order to get Laravel to now play nice with multiple databases, I have had success making some modifications to change the way that Laravel uses the `DB_CONNECTION` env variable. For this, it requires editing the database config, specifically your connections:
+
+```php
+<?php
+
+// ...
+
+return [
+
+// ...
+
+    'connections' => [
+        env('DB_CONNECTION', 'mysql') => [
+            'driver' => env('DB_DRIVER', 'mysql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        env('SECONDARY_DB_CONNECTION') => [
+            'driver' => env('SECONDARY_DB_DRIVER', 'mysql'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('SECONDARY_DB_HOST', '127.0.0.1'),
+            'port' => env('SECONDARY_DB_PORT', '3306'),
+            'database' => env('SECONDARY_DB_DATABASE', 'forge'),
+            'username' => env('SECONDARY_DB_USERNAME', 'forge'),
+            'password' => env('SECONDARY_DB_PASSWORD', ''),
+            'unix_socket' => env('SECONDARY_DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+    ],
+    
+// ...
+
+];
+```
+
+It's important to set the `'default'` connection to which ever you prefer to be the default connection. I am assuming for the rest of these steps that it will remain as the value of `DB_CONNECTION`, meaning the following steps will focus on how to implement `SECONDARY_DB_CONNECTION` where necessary.
+
+All I'm doing here is mapping the new `DB_DRIVER` env variable to the `'driver'` key, instead of using its name via the `DB_CONNECTION` variable which is the default behaviour. This also stops the database name from being fixed, and instead places it against the `DB_CONNECTION` variable value meaning the `.env` now controls all aspects of the connection.
+
+This decouples the driver from the name and allows for dynamically setting the driver and name independently, which comes in helpful for testing, when you can do things like, in your `.env.testing`:
+
+```env
+# ...
+
+# Primary (App) DB
+DB_CONNECTION=my_app_database
+DB_DRIVER=sqlite
+DB_DATABASE=:memory:
+
+# Secondary DB
+SECONDARY_DB_CONNECTION=my_secondary_database
+SECONDARY_DB_DRIVER=sqlite
+SECONDARY_DB_DATABASE=:memory:
+
+# ...
+```
+
+Before this was not possible, as you'd have no control over your driver. You can get around this by defining another database connection with the other driver, which you may prefer and is equally valid, I just prefer doing it this way.
+
+#### Models
+
+Your models can now be updated to make use of this new configuration, with any models using the `my_secondary_database` connection needing to be updated as follows:
+
+```php
+<?php
+
+// ...
+
+class MyModel extends Model
+{
+    // ...
+
+    /**
+     * The connection name for the model.
+     *
+     * @var string|null
+     */
+    protected $connection = 'defined_by_env_in_constructor';
+    
+    // ...
+
+    /**
+     * Mirror parent constructor and allow the connection to be set by env.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->connection = env('SECONDARY_DB_CONNECTION');
+    }
+
+    // ...
+}
+```
+
+#### Migrations
+
+Your migrations can now be updated to make use of this new configuration, with any migrations using the `my_secondary_database` connection needing to be updated as follows:
+
+```php
+<?php
+
+// ...
+
+class CreateMyTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::connection(env('SECONDARY_DB_CONNECTION'))
+            ->create('my_table', function (Blueprint $table) {
+                // ...
+            });
+    }
+
+    // ...
+}
+```
+
+... and thats it! As long as the values in your `.env` correctly reflect your environment, all should *just work*.
 
 ## Recommended Packages
 

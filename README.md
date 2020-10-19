@@ -592,6 +592,8 @@ Of course, if you want to take your self to the next level, learn anything new o
   - A brilliant plugin that does exactly what it says, adds 'enums' to Laravel. Very handy!
 - [scribe](https://github.com/knuckleswtf/scribe)
   - Brilliant automated API docs generator, with Postman integration. Unfortunately, the original repo [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) appears to [no longer be maintained](https://github.com/mpociot/laravel-apidoc-generator/issues/777), with one of the lead maintainers forking it to create Scribe! There is also a [migration guide](https://scribe.readthedocs.io/en/latest/migrating.html) for this as part of the Scribe project.
+- [enlighten](https://github.com/StydeNet/enlighten)
+  - Like Scribe above, but with more of an emphasis on documentation generation being automated. Looks like a pretty incredible bit of kit, and I cannot wait to try it!
 - [laravel-package](https://github.com/Jhnbrn90/LaravelPackage.com)
   - Okay, so not a package per-say, but it is an incredible resource on creating them.
 - [symfony](https://symfony.com/)

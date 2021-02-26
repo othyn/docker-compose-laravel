@@ -594,6 +594,8 @@ Of course, if you want to take your self to the next level, learn anything new o
   - Brilliant automated API docs generator, with Postman integration. Unfortunately, the original repo [laravel-apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator) appears to [no longer be maintained](https://github.com/mpociot/laravel-apidoc-generator/issues/777), with one of the lead maintainers forking it to create Scribe! There is also a [migration guide](https://scribe.readthedocs.io/en/latest/migrating.html) for this as part of the Scribe project.
 - [enlighten](https://github.com/StydeNet/enlighten)
   - Like Scribe above, but with more of an emphasis on documentation generation being automated. Looks like a pretty incredible bit of kit, and I cannot wait to try it!
+- [laravel-debugbar](https://github.com/barryvdh/laravel-debugbar)
+  - An amazing package for debugging and profiling your application via a handy GUI built into the dev stream of your application.
 - [laravel-package](https://github.com/Jhnbrn90/LaravelPackage.com)
   - Okay, so not a package per-say, but it is an incredible resource on creating them.
 - [symfony](https://symfony.com/)

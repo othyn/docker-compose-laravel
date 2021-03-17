@@ -2,6 +2,10 @@
 
 An opinionated Docker Compose setup for Laravel projects, inspired by [this repo](https://github.com/aschmelyun/docker-compose-laravel).
 
+## Laravel Sail is now a thing - use that! 😉
+
+[Laravel Sail](https://laravel.com/docs/8.x/sail) is now the new first party recommended default development environment, which is a lovely Laravel-ified wrapper around Docker. I love using it and functionality wise, it replaces this repo nicely. So I will be archiving this repo in favour of Sail, so yeah, go use that and make something wonderful 😄
+
 ## Table of contents
 
 - [Docker Compose for Laravel](#-docker-compose-for-laravel-)
